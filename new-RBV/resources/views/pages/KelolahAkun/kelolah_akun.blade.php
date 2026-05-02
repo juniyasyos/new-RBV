@@ -302,7 +302,7 @@
                         Tidak
                     </button>
                     <button type="submit"
-                        class="py-2.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition">
+                        class="py-2.5 bg-green-600 text-white text-sm font-bold rounded-xl hover:bg-green-700 transition">
                         Ya, Reset Semua
                     </button>
                 </div>

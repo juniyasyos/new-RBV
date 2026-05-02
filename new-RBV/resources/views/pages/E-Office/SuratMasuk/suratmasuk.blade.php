@@ -65,13 +65,38 @@
                 <form method="GET" action="{{ route('eoffice.surat-masuk.index') }}">
                     <div class="flex flex-col gap-4">
 
+                        @if(in_array(auth()->user()->role, ['unit','karyawan']))
+                        {{-- Unit: search + cari dalam 1 baris --}}
+                        <div class="flex gap-3 items-center">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                placeholder="Cari nomor agenda / perihal / nomor surat..."
+                                class="flex-1 bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3.5 px-6 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] transition">
+                            <button type="submit"
+                                class="px-8 py-3.5 bg-[#2B3A8C] text-white text-sm font-bold rounded-2xl
+                                    hover:bg-blue-800 transition shadow-lg shadow-blue-100 whitespace-nowrap">
+                                Cari
+                            </button>
+                            @if(request('search'))
+                            <a href="{{ route('eoffice.surat-masuk.index') }}"
+                                class="px-5 py-3.5 bg-gray-100 text-gray-600 text-sm font-bold rounded-2xl
+                                    hover:bg-gray-200 transition whitespace-nowrap">
+                                Reset
+                            </a>
+                            @endif
+                        </div>
+                        @else
                         <input type="text" name="search" value="{{ request('search') }}"
                             placeholder="Cari nomor agenda / perihal / nomor surat..."
                             class="w-full bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3.5 px-6 text-sm
-                                   focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] transition">
+                                focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] transition">
+                        @endif
 
+                        @if(!in_array(auth()->user()->role,['unit','karyawan']))
                         <div class="flex flex-wrap items-center gap-3">
 
+                            
+                            {{-- @if(auth()->user()->hasRole(['super_admin', 'sekretaris'])) --}}
                             <select name="kategori" id="filterKategori"
                                 onchange="filterUnitByKategori(this.value)"
                                 class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
@@ -83,7 +108,9 @@
                                 </option>
                                 @endforeach
                             </select>
+                            {{-- @endif --}}
 
+                            {{-- @if(auth()->user()->hasRole(['super_admin', 'sekretaris'])) --}}
                             <select name="unit" id="filterUnit"
                                 class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
                                        focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] min-w-[160px]
@@ -101,7 +128,9 @@
                                     @endforeach
                                 @endforeach
                             </select>
+                            {{-- @endif --}}
 
+                            {{-- @if(auth()->user()->hasRole('super_admin', 'sekretasi')) --}}
                             <select name="prioritas"
                                 class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
                                        focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
@@ -110,7 +139,9 @@
                                 <option value="sedang" {{ request('prioritas') == 'sedang' ? 'selected' : '' }}>🟡 Sedang</option>
                                 <option value="biasa"  {{ request('prioritas') == 'biasa'  ? 'selected' : '' }}>🟢 Biasa</option>
                             </select>
+                            {{-- @endif --}}
 
+                            {{-- @if(auth()->user()->hasRole('super_admin','sekretaris')) --}}
                             <select name="status"
                                 class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
                                        focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
@@ -122,6 +153,7 @@
                                 <option value="disetujui"           {{ request('status') == 'disetujui'           ? 'selected' : '' }}>Disetujui</option>
                                 <option value="ditolak"             {{ request('status') == 'ditolak'             ? 'selected' : '' }}>Ditolak</option>
                             </select>
+                            {{-- @endif --}}
 
                             <div class="flex gap-2 ml-auto">
                                 <button type="submit"
@@ -137,6 +169,7 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -153,16 +186,16 @@
                             <th class="text-left px-4 py-4 font-bold">Tgl Masuk</th>
                             
                             @if(auth()->user()->hasRole(['super_admin', 'sekretaris']))
-                            <th class="text-left px-4 py-4 font-bold">Prioritas</th>
+                            <th class="text-center px-4 py-4 font-bold">Prioritas</th>
                             @endif
-                            <th class="text-left px-4 py-4 font-bold">Status</th>
+                            <th class="text-center px-4 py-4 font-bold">Status</th>
                             <th class="text-center px-4 py-4 font-bold">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
                         @forelse($suratMasuk as $surat)
 
-                        <tr class="hover:bg-[#F8FAFF] transition
+                        <tr class="hover:bg-[#F8FAFF] transition align-middle
                             {{ $surat->status === 'menunggu_sekretaris' && auth()->user()->role === 'sekretaris' ? 'bg-orange-50/50' : '' }}
                             {{ $surat->status === 'pending' ? 'bg-yellow-50/40' : '' }}">
 
@@ -208,20 +241,20 @@
                             </td>
 
                             @if(auth()->user()->hasRole(['super_admin', 'sekretaris']))
-                            <td class="px-4 py-5">
+                            <td class="px-4 py-5 text-center">
                                 @if($surat->prioritas === 'segera')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-100 text-red-600">🔴 SEGERA</span>
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-100 text-red-600 whitespace-nowrap">🔴 SEGERA</span>
                                 @elseif($surat->prioritas === 'sedang')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-yellow-100 text-yellow-600">🟡 SEDANG</span>
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-yellow-100 text-yellow-600 whitespace-nowrap">🟡 SEDANG</span>
                                 @elseif($surat->prioritas === 'biasa')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-600">🟢 BIASA</span>
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-600 whitespace-nowrap">🟢 BIASA</span>
                                 @else
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-gray-100 text-gray-400">— Belum diset</span>
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-gray-100 text-gray-400 whitespace-nowrap">— Belum diset</span>
                                 @endif
                             </td>
                             @endif
 
-                            <td class="px-4 py-5">
+                            <td class="px-4 py-5 text-center">
                                 @php
                                     $sm = [
                                         'menunggu_sekretaris' => ['text-orange-700', 'Menunggu Acc'],
@@ -233,7 +266,7 @@
                                     ];
                                     [$cls, $lbl] = $sm[$surat->status] ?? ['text-red-700', ucfirst($surat->status)];
                                 @endphp
-                                <span class="px-2.5 py-1 rounded-full text-[12px] font-poppins font-bold {{ $cls }}
+                                <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] font-bold whitespace-nowrap {{ $cls }}
                                     {{ $surat->status === 'menunggu_sekretaris' ? 'animate-pulse' : '' }}">
                                     {{ $lbl }}
                                 </span>
@@ -253,7 +286,7 @@
 
                                     @if(auth()->user()->role === 'sekretaris' && $surat->status === 'menunggu_sekretaris')
                                     <a href="{{ route('eoffice.surat-masuk.edit', $surat->id) }}"
-                                        class="inline-flex items-center gap-1.5 px-3 py-2.5 bg-[#2B3A8C] text-white text-xs font-bold
+                                        class="inline-flex items-center gap-1.5 px-3 py-2.5 bg-[#2B3A8C] text-white text-xs font-bold 
                                                rounded-xl hover:bg-blue-900 transition"
                                         title="Proses & Teruskan">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -276,7 +309,7 @@
                         @empty
                         <tr>
                             <td colspan="9" class="px-4 py-20 text-center text-gray-400 italic"> 
-                                Belum ada data surat masuk.
+                                Surat yang anda cari tidak ditemukan
                             </td>
                         </tr>
                         @endforelse

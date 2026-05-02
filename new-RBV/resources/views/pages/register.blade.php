@@ -1,195 +1,418 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="min-h-screen bg-[#F0F4FF] py-8 sm:py-12">
 
-<div class="relative min-h-screen flex items-center justify-center overflow-hidden">
-
-    {{-- Background Image --}}
-    <div class="absolute inset-0 z-0">
-        <img src="{{ asset('images/image0.jpg') }}"
-            alt="background"
-            class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-black/40"></div>
-    </div>
-
-    {{-- Card --}}
-    <div class="relative z-10 w-full max-w-sm mx-4">
-        <div class="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl shadow-2xl px-10 py-10">
-
-            {{-- Judul --}}
-            <h1 class="font-montserrat text-3xl font-bold text-white text-center mb-1 tracking-wide">
-                Login
-            </h1>
-            <p class="font-montserrat text-white/80 text-sm text-center mb-3">
-                Gunakan akun anda untuk masuk.
-            </p>
-
-            {{-- Quote dengan animasi slide --}}
-            <div class="mb-7 min-h-[52px] flex items-center justify-center overflow-hidden">
-                <div id="quoteWrapper" class="text-center w-full">
-                    <p id="quoteText"
-                        class="font-montserrat text-white/70 text-xs italic leading-relaxed px-2
-                               transition-all duration-700 ease-in-out">
-                    </p>
-                    <p id="quoteAuthor"
-                        class="font-montserrat text-white/50 text-[10px] mt-1
-                               transition-all duration-700 ease-in-out">
-                    </p>
-                </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h1 class="font-poppins text-3xl sm:text-4xl font-extrabold text-[#2B3A8C] tracking-tight">Surat Masuk</h1>
+                <p class="text-gray-500 text-sm mt-1">
+                    @if(auth()->user()->role === 'sekretaris')
+                        Semua surat masuk dari seluruh unit
+                    @elseif(in_array(auth()->user()->jabatan, ['direktur','kabag']))
+                        Monitoring surat masuk
+                    @else
+                        Surat masuk yang kamu kirim
+                    @endif
+                </p>
             </div>
 
-            {{-- Error --}}
-            @if(session('error'))
-            <div class="bg-red-500/20 border border-red-500/50 text-white text-xs p-3 rounded-lg text-center mb-4">
-                {{ session('error') }}
+            <div class="flex items-center gap-3">
+                @if(in_array(auth()->user()->role, ['super_admin','admin','sekretaris']))
+                <a href="{{ route('eoffice.surat-masuk.export') }}"
+                    class="flex items-center gap-2 px-5 py-3 bg-white text-green-600 font-bold text-sm rounded-2xl
+                           shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    <span>Export</span>
+                </a>
+                @endif
+
+                {{-- Tombol Tambah/Kirim: disembunyikan untuk direktur & kabag --}}
+                @if(!in_array(auth()->user()->jabatan, ['direktur', 'kabag']))
+                <a href="{{ route('eoffice.surat-masuk.create') }}"
+                    class="flex items-center gap-2 px-5 py-3 bg-white text-[#2B3A8C] font-bold text-sm rounded-2xl
+                           shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    @if(in_array(auth()->user()->role, ['sekretaris','super_admin','admin']))
+                        <span>Tambah Surat</span>
+                    @else
+                        <span>Kirim Surat</span>
+                    @endif
+                </a>
+                @endif
             </div>
-            @endif
-
-            @if($errors->any())
-            <div class="bg-red-500/20 border border-red-500/50 text-white text-xs p-3 rounded-lg text-center mb-4">
-                {{ $errors->first() }}
-            </div>
-            @endif
-
-            {{-- Form --}}
-            <form method="POST" action="{{ route('login.post') }}" class="space-y-4">
-                @csrf
-
-                <div>
-                    <label class="block font-montserrat text-white text-sm font-medium mb-1">NIK</label>
-                    <input
-                        type="text"
-                        name="NIK"
-                        value="{{ old('NIK') }}"
-                        required
-                        placeholder="Masukkan NIK kamu"
-                        class="w-full px-4 py-2.5 rounded-lg bg-white/90 font-montserrat text-gray-800
-                               placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-white/60 transition">
-                </div>
-
-                <div>
-                    <label class="block font-montserrat text-white text-sm font-medium mb-1">Password</label>
-                    <div class="relative">
-                        <input
-                            type="password"
-                            name="password"
-                            id="passwordInput"
-                            required
-                            placeholder="Masukkan password kamu"
-                            class="w-full px-4 py-2.5 pr-10 rounded-lg bg-white/90 font-montserrat text-gray-800
-                                   placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-white/60 transition">
-                        <button type="button" onclick="togglePassword()"
-                            class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 transition">
-                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" name="remember" id="remember"
-                        class="w-4 h-4 rounded border-gray-300 text-[#1E3A8A]">
-                    <label for="remember" class="font-montserrat text-white/70 text-xs cursor-pointer">
-                        Ingat saya
-                    </label>
-                </div>
-
-                <div class="pt-1">
-                    <button type="submit"
-                        class="w-full py-2.5 bg-[#1E3A8A] hover:bg-[#1e40af] font-poppins text-white font-semibold
-                               rounded-lg transition duration-200 tracking-wide shadow-lg">
-                        Masuk
-                    </button>
-                </div>
-
-            </form>
-
-            <p class="text-center text-white/40 text-[10px] mt-6">
-                &copy; {{ date('Y') }} RS Citra Husada
-            </p>
-
         </div>
     </div>
 
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
+
+        {{-- Badge menunggu acc --}}
+        @if(auth()->user()->role === 'sekretaris' && $suratMenunggu > 0)
+        <div class="flex items-center gap-3 bg-orange-50 border border-orange-200 rounded-2xl px-5 py-3.5 mb-5">
+            <div class="w-2.5 h-2.5 rounded-full bg-orange-400 animate-pulse flex-shrink-0"></div>
+            <p class="text-sm font-semibold text-orange-700">
+                {{ $suratMenunggu }} surat dari unit menunggu diproses
+            </p>
+        </div>
+        @endif
+
+        <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 sm:p-8">
+
+            {{-- Filter & Search --}}
+            <div class="mb-8">
+                <form method="GET" action="{{ route('eoffice.surat-masuk.index') }}">
+                    <div class="flex flex-col gap-4">
+
+                        {{-- Search bar: untuk unit langsung inline dengan tombol Cari --}}
+                        @if(in_array(auth()->user()->role, ['unit','karyawan']))
+                        <div class="flex gap-3 items-center">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                placeholder="Cari nomor agenda / perihal / nomor surat..."
+                                class="flex-1 bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3.5 px-6 text-sm
+                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] transition">
+                            <button type="submit"
+                                class="px-8 py-3.5 bg-[#2B3A8C] text-white text-sm font-bold rounded-2xl
+                                       hover:bg-blue-800 transition shadow-lg shadow-blue-100 whitespace-nowrap">
+                                Cari
+                            </button>
+                            @if(request('search'))
+                            <a href="{{ route('eoffice.surat-masuk.index') }}"
+                                class="px-5 py-3.5 bg-gray-100 text-gray-600 text-sm font-bold rounded-2xl hover:bg-gray-200 transition whitespace-nowrap">
+                                Reset
+                            </a>
+                            @endif
+                        </div>
+                        @else
+                        <div class="flex flex-wrap items-center gap-3">
+
+                            {{-- Search --}}
+                            <div class="flex flex-1 min-w-[220px] rounded-2xl overflow-hidden border border-gray-100 bg-[#F8FAFF]">
+                                <div class="px-4 flex items-center text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </div>
+                                <input type="text" name="search" value="{{ request('search') }}"
+                                    placeholder="Cari nomor agenda / perihal / nomor surat..."
+                                    class="flex-1 py-3.5 pr-4 text-sm bg-transparent focus:outline-none text-gray-700 placeholder:text-gray-400">
+                            </div>
+
+                            @if(!in_array(auth()->user()->role, ['unit','karyawan']))
+                            {{-- Dropdown Kategori --}}
+                            <select name="kategori" id="filterKategori"
+                                onchange="filterUnitByKategori(this.value)"
+                                class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
+                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] min-w-[170px]">
+                                <option value="">Semua Kategori</option>
+                                @foreach($kategoriList as $kat => $units)
+                                <option value="{{ $kat }}" {{ request('kategori') == $kat ? 'selected' : '' }}>
+                                    {{ $kat }}
+                                </option>
+                                @endforeach
+                            </select>
+
+                            {{-- Dropdown Unit (sub dari kategori) --}}
+                            <select name="unit" id="filterUnit"
+                                class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
+                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] min-w-[160px]
+                                       {{ request('kategori') ? '' : 'opacity-50 cursor-not-allowed' }}"
+                                {{ request('kategori') ? '' : 'disabled' }}>
+                                <option value="">Semua Unit</option>
+                                @foreach($kategoriList as $kat => $units)
+                                    @foreach($units as $unitNama)
+                                    <option value="{{ $unitNama }}"
+                                        data-kategori="{{ $kat }}"
+                                        {{ request('unit') == $unitNama ? 'selected' : '' }}
+                                        class="unit-option">
+                                        {{ $unitNama }}
+                                    </option>
+                                    @endforeach
+                                @endforeach
+                            </select>
+
+                            {{-- Prioritas --}}
+                            <select name="prioritas"
+                                class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
+                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                                <option value="">Semua Prioritas</option>
+                                <option value="segera" {{ request('prioritas') == 'segera' ? 'selected' : '' }}>🔴 Segera</option>
+                                <option value="sedang" {{ request('prioritas') == 'sedang' ? 'selected' : '' }}>🟡 Sedang</option>
+                                <option value="biasa"  {{ request('prioritas') == 'biasa'  ? 'selected' : '' }}>🟢 Biasa</option>
+                            </select>
+
+                            {{-- Status --}}
+                            <select name="status"
+                                class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
+                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                                <option value="">Semua Status</option>
+                                <option value="menunggu_sekretaris" {{ request('status') == 'menunggu_sekretaris' ? 'selected' : '' }}>Menunggu Acc</option>
+                                <option value="menunggu_direktur"   {{ request('status') == 'menunggu_direktur'   ? 'selected' : '' }}>Menunggu Direktur</option>
+                                <option value="menunggu_kabag"      {{ request('status') == 'menunggu_kabag'      ? 'selected' : '' }}>Menunggu Kabag</option>
+                                <option value="pending"             {{ request('status') == 'pending'             ? 'selected' : '' }}>Pending</option>
+                                <option value="disetujui"           {{ request('status') == 'disetujui'           ? 'selected' : '' }}>Disetujui</option>
+                                <option value="ditolak"             {{ request('status') == 'ditolak'             ? 'selected' : '' }}>Ditolak</option>
+                            </select>
+                            @endif
+
+                            <button type="submit"
+                                class="px-8 py-3 bg-[#2B3A8C] text-white text-sm font-bold rounded-2xl
+                                       hover:bg-blue-800 transition shadow-lg shadow-blue-100 whitespace-nowrap">
+                                Cari
+                            </button>
+                            @if(request()->hasAny(['search','kategori','prioritas','status']))
+                            <a href="{{ route('eoffice.surat-masuk.index') }}"
+                                class="px-5 py-3 bg-gray-100 text-gray-600 text-sm font-bold rounded-2xl hover:bg-gray-200 transition whitespace-nowrap">
+                                Reset
+                            </a>
+                            @endif
+                        </div>
+                        @endif
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {{-- Tabel --}}
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-gray-400 border-b border-gray-50 text-xs uppercase tracking-widest">
+                            <th class="text-left px-4 py-4 font-bold">No. Agenda</th>
+                            <th class="text-left px-4 py-4 font-bold">Asal Surat</th>
+                            <th class="text-left px-4 py-4 font-bold">Kategori Unit</th>
+                            <th class="text-left px-4 py-4 font-bold">Unit Pengirim</th>
+                            <th class="text-left px-4 py-4 font-bold">Perihal</th>
+                            <th class="text-left px-4 py-4 font-bold">Tgl Masuk</th>
+                            <th class="text-center px-4 py-4 font-bold">Prioritas</th>
+                            <th class="text-center px-4 py-4 font-bold">Status</th>
+                            <th class="text-center px-4 py-4 font-bold">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        @forelse($suratMasuk as $surat)
+
+                        {{-- Highlight baris pending --}}
+                        <tr class="hover:bg-[#F8FAFF] transition align-middle
+                            {{ $surat->status === 'menunggu_sekretaris' && auth()->user()->role === 'sekretaris' ? 'bg-orange-50/50' : '' }}
+                            {{ $surat->status === 'pending' ? 'bg-yellow-50/40' : '' }}">
+
+                            <td class="px-4 py-5 font-mono font-bold text-[#2B3A8C] whitespace-nowrap">
+                                {{ $surat->nomor_agenda }}
+                            </td>
+
+                            <td class="px-4 py-5">
+                                <p class="text-gray-700 font-medium">{{ $surat->asal_surat }}</p>
+                            </td>
+
+                            <td class="px-4 py-5">
+                                @php
+                                    $kategoriColor = [
+                                        'Pelayanan Medis'  => 'bg-blue-50 text-blue-700',
+                                        'Penunjang Medis'  => 'bg-purple-50 text-purple-700',
+                                        'Keperawatan'      => 'bg-pink-50 text-pink-700',
+                                        'Umum'             => 'bg-gray-100 text-gray-600',
+                                        'Keuangan'         => 'bg-green-50 text-green-700',
+                                    ];
+                                    $kat = $surat->pembuat->kategori_unit ?? '-';
+                                    $kColor = $kategoriColor[$kat] ?? 'bg-gray-100 text-gray-500';
+                                @endphp
+                                <span class="text-xs px-2.5 py-1 rounded-lg font-semibold {{ $kColor }} whitespace-nowrap">
+                                    {{ $kat }}
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-5">
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-700">{{ $surat->pembuat->unit_kerja ?? '-' }}</p>
+                                    <p class="text-[10px] text-gray-400 mt-0.5">{{ $surat->pembuat->nama_lengkap ?? '' }}</p>
+                                </div>
+                            </td>
+
+                            <td class="px-4 py-5 max-w-[220px]">
+                                <p class="font-semibold text-gray-700 truncate">{{ $surat->perihal }}</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">{{ $surat->nomor_surat ?? '-' }}</p>
+                            </td>
+
+                            <td class="px-4 py-5 text-xs text-gray-400 whitespace-nowrap">
+                                {{ \Carbon\Carbon::parse($surat->tanggal_masuk)->translatedFormat('d M Y') }}
+                            </td>
+
+                            <td class="px-4 py-5 text-center">
+                                @if($surat->prioritas === 'segera')
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-100 text-red-600 whitespace-nowrap">🔴 SEGERA</span>
+                                @elseif($surat->prioritas === 'sedang')
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-yellow-100 text-yellow-600 whitespace-nowrap">🟡 SEDANG</span>
+                                @elseif($surat->prioritas === 'biasa')
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-600 whitespace-nowrap">🟢 BIASA</span>
+                                @else
+                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-gray-100 text-gray-400 whitespace-nowrap">— Belum diset</span>
+                                @endif
+                            </td>
+
+                            <td class="px-4 py-5 text-center">
+                                @php
+                                    $sm = [
+                                        'menunggu_sekretaris' => ['bg-orange-100 text-orange-700', 'Menunggu Acc'],
+                                        'menunggu_direktur'   => ['bg-yellow-100 text-yellow-700', 'Menunggu Direktur'],
+                                        'menunggu_kabag'      => ['bg-blue-100 text-blue-700',     'Menunggu Kabag'],
+                                        'pending'             => ['bg-yellow-50 text-yellow-600',  'Pending'],
+                                        'disetujui'           => ['bg-green-100 text-green-700',   'Disetujui'],
+                                        'ditolak'             => ['bg-red-100 text-red-700',       'Ditolak'],
+                                    ];
+                                    [$cls, $lbl] = $sm[$surat->status] ?? ['bg-gray-100 text-gray-500', ucfirst($surat->status)];
+                                @endphp
+                                <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] font-bold whitespace-nowrap {{ $cls }}
+                                    {{ $surat->status === 'menunggu_sekretaris' ? 'animate-pulse' : '' }}">
+                                    {{ $lbl }}
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-5">
+                                <div class="flex items-center justify-center gap-2">
+
+                                    {{-- Lihat Detail --}}
+                                    <a href="{{ route('eoffice.surat-masuk.show', $surat->id) }}"
+                                        class="inline-flex items-center justify-center p-2.5 bg-blue-50 text-blue-600 rounded-xl
+                                               hover:bg-[#2B3A8C] hover:text-white transition"
+                                        title="Lihat Detail">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </a>
+
+                                    {{-- Proses: sekretaris + menunggu_sekretaris --}}
+                                    @if(auth()->user()->role === 'sekretaris' && $surat->status === 'menunggu_sekretaris')
+                                    <a href="{{ route('eoffice.surat-masuk.edit', $surat->id) }}"
+                                        class="inline-flex items-center gap-1.5 px-3 py-2.5 bg-[#2B3A8C] text-white text-xs font-bold
+                                               rounded-xl hover:bg-blue-900 transition"
+                                        title="Proses & Teruskan">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                        Proses
+                                    </a>
+                                    @endif
+
+                                    {{-- Edit: kabag bisa edit surat pending untuk mengubah status (acc lagi) --}}
+                                    @if($surat->status === 'pending' && auth()->user()->jabatan === 'kabag')
+                                    <a href="{{ route('eoffice.surat-masuk.edit', $surat->id) }}"
+                                        class="p-1.5 bg-[#00A14C] text-white rounded-lg shadow hover:scale-110 transition">
+                                        <img src="{{ asset('images/Edit.svg') }}" class="w-5 h-5">
+                                    </a>
+                                    @endif
+
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="9" class="px-4 py-20 text-center text-gray-400 italic">
+                                Belum ada data surat masuk.
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            @if($suratMasuk->hasPages())
+            <div class="mt-8 pt-6 border-t border-gray-50">
+                {{ $suratMasuk->links() }}
+            </div>
+            @endif
+
+        </div>
+    </div>
 </div>
-
 <script>
-// ── Daftar quote — berubah berdasarkan hari dalam setahun ──────────────
-const quotes = [
-    { text: "Selamat datang di Ruang Baca Virtual RS Citra Husada.", author: "— RBV System" },
-    { text: "Kesehatan anda adalah harapan kami. Mari bekerja bersama dengan penuh dedikasi.", author: "— RS Citra Husada" },
-    { text: "Pelayanan terbaik lahir dari tim yang solid dan berdedikasi.", author: "— RS Citra Husada" },
-    { text: "Ilmu yang dibagikan akan terus tumbuh dan memberi manfaat.", author: "— Inspirasi Hari Ini" },
-    { text: "Setiap surat yang terkelola dengan baik adalah langkah menuju birokrasi yang lebih sehat.", author: "— RBV System" },
-    { text: "Kerja keras hari ini adalah fondasi kesuksesan hari esok.", author: "— Pepatah" },
-    { text: "Profesionalisme bukan hanya soal keahlian, tapi juga tanggung jawab.", author: "— RS Citra Husada" },
-    { text: "Dokumentasi yang rapi adalah cermin dari organisasi yang baik.", author: "— RBV System" },
-    { text: "Bersama kita wujudkan pelayanan kesehatan yang berkualitas untuk masyarakat.", author: "— RS Citra Husada" },
-    { text: "Semangat pagi! Hari baru, semangat baru, karya terbaik untuk pasien kita.", author: "— Inspirasi Hari Ini" },
-    { text: "Kepercayaan pasien adalah amanah yang harus kita jaga sepenuh hati.", author: "— RS Citra Husada" },
-    { text: "Teknologi hadir untuk memudahkan, bukan mempersulit. Gunakanlah dengan bijak.", author: "— RBV System" },
-    { text: "Setiap langkah kecil dalam pekerjaan kita berkontribusi pada kesehatan masyarakat.", author: "— RS Citra Husada" },
-    { text: "Disiplin dalam administrasi adalah disiplin dalam pelayanan.", author: "— Inspirasi Hari Ini" },
-    { text: "Hari ini adalah kesempatan untuk memberikan yang terbaik bagi tim dan pasien kita.", author: "— RS Citra Husada" },
-];
+// Data unit per kategori (harus sync dengan controller)
+const unitPerKategori = {
+    'Kabid Keperawatan': [
+        'Unit Poliklinik Rawat Jalan',
+        'Instalasi Gawat Darurat',
+        'Unit Rawat Inap Ruang Lotus',
+        'Unit Rawat Inap Ruang Rosalina',
+        'Unit Rawat Inap Ruang Alamanda',
+        'Unit Rawat Inap Ruang Teratai',
+        'Unit Rawat Inap Ruang Anturium',
+        'Unit Rawat Inap Ruang Tulip',
+        'Unit Kamar Operasi',
+        'Unit ICU',
+        'Unit Hemodialisis',
+        'Unit Kamar Bersalin',
+        'Unit Perinatologi',
+    ],
+    'Kabid Pelayanan Medis': [
+        'Unit Poliklinik Rawat Jalan',
+        'Instalasi Gawat Darurat',
+        'Unit Rawat Inap Ruang Lotus',
+        'Unit Rawat Inap Ruang Rosalina',
+        'Unit Rawat Inap Ruang Alamanda',
+        'Unit Rawat Inap Ruang Teratai',
+        'Unit Rawat Inap Ruang Anturium',
+        'Unit Rawat Inap Ruang Tulip',
+        'Unit Kamar Operasi',
+        'Unit ICU',
+        'Unit Hemodialisis',
+        'Unit Kamar Bersalin',
+        'Unit Perinatologi',
+    ],
+    'Kabid Penunjang Medis': [
+        'Unit Radiologi',
+        'Unit Laboratorium',
+        'Unit Gizi',
+        'Unit Farmasi',
+        'Unit Rekam Medik',
+    ],
+    'Kabag Umum & Keuangan': [
+        'Unit Umum Rumah Tangga',
+        'Unit Informasi & TI',
+        'Unit Keuangan',
+        'Unit Pajak',
+        'Unit Akuntansi',
+        'Unit Kepegawaian & Diklat',
+    ],
+};
 
-// Tentukan quote berdasarkan hari dalam setahun (berubah tiap hari)
-function getQuoteOfTheDay() {
-    const now       = new Date();
-    const start     = new Date(now.getFullYear(), 0, 0);
-    const diff      = now - start;
-    const oneDay    = 1000 * 60 * 60 * 24;
-    const dayOfYear = Math.floor(diff / oneDay);
-    return quotes[dayOfYear % quotes.length];
+const filterKategori = document.getElementById('filterKategori');
+const filterUnit     = document.getElementById('filterUnit');
+
+function filterUnitByKategori(kategori) {
+    // Reset unit dropdown
+    filterUnit.innerHTML = '<option value="">Semua Unit</option>';
+
+    if (!kategori) {
+        filterUnit.disabled = true;
+        filterUnit.classList.add('opacity-50', 'cursor-not-allowed');
+        return;
+    }
+
+    filterUnit.disabled = false;
+    filterUnit.classList.remove('opacity-50', 'cursor-not-allowed');
+
+    const units = unitPerKategori[kategori] || [];
+    units.forEach(unit => {
+        const opt = document.createElement('option');
+        opt.value       = unit;
+        opt.textContent = unit;
+        // Pertahankan pilihan sebelumnya (saat page reload)
+        if ('{{ request("unit") }}' === unit) opt.selected = true;
+        filterUnit.appendChild(opt);
+    });
 }
 
-// Animasi slide in dari bawah
-function showQuote(quote) {
-    const textEl   = document.getElementById('quoteText');
-    const authorEl = document.getElementById('quoteAuthor');
-
-    // Slide keluar ke atas
-    textEl.style.opacity   = '0';
-    textEl.style.transform = 'translateY(-12px)';
-    authorEl.style.opacity = '0';
-
-    setTimeout(() => {
-        textEl.textContent   = `"${quote.text}"`;
-        authorEl.textContent = quote.author;
-
-        // Slide masuk dari bawah
-        textEl.style.transform = 'translateY(12px)';
-
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                textEl.style.opacity   = '1';
-                textEl.style.transform = 'translateY(0)';
-                authorEl.style.opacity = '1';
-            });
-        });
-    }, 350);
-}
-
-// Init
+// Init saat halaman load — kalau ada kategori di query string, populate unit-nya
 document.addEventListener('DOMContentLoaded', () => {
-    const textEl   = document.getElementById('quoteText');
-    const authorEl = document.getElementById('quoteAuthor');
-
-    // Set transition
-    textEl.style.transition   = 'opacity 0.6s ease, transform 0.6s ease';
-    authorEl.style.transition = 'opacity 0.6s ease';
-
-    // Tampilkan quote hari ini dengan delay kecil agar smooth
-    setTimeout(() => showQuote(getQuoteOfTheDay()), 200);
+    const initKategori = filterKategori.value;
+    if (initKategori) {
+        filterUnitByKategori(initKategori);
+    }
 });
 </script>
-
-<style>
-#quoteText, #quoteAuthor {
-    opacity: 0;
-    transform: translateY(12px);
-}
-</style>
 
 @endsection

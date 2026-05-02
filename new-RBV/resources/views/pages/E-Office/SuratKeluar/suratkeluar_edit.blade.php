@@ -119,10 +119,10 @@
                         class="px-6 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition">
                         Batal
                     </a>
-                    <a href="{{ route('eoffice.surat-keluar.show', $surat->id) }}"
+                    {{-- <a href="{{ route('eoffice.surat-keluar.show', $surat->id) }}"
                         class="px-6 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition">
                         Lihat Detail
-                    </a>
+                    </a> --}}
                     <button type="submit"
                         class="px-8 py-2.5 bg-[#2B3A8C] text-white text-sm font-bold rounded-xl
                                hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-200 transition">

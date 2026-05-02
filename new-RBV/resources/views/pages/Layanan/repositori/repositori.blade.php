@@ -100,7 +100,7 @@
 
             <div class="flex items-center gap-8 flex-shrink-0">
 
-                @if($item->file)
+                {{-- @if($item->file)
                 <a href="{{ asset('storage/' . $item->file) }}"
                 download
                 class="p-2 bg-gray-300 text-white rounded-lg shadow hover:bg-gray-400 hover:scale-110 transition">
@@ -109,7 +109,7 @@
                             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
                 </a>
-                @endif
+                @endif --}}
 
                 @auth
                     @if(in_array(auth()->user()->role, ['super_admin']))
