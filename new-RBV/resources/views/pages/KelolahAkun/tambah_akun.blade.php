@@ -74,22 +74,37 @@
                                 autocomplete="off"
                                 class="flex-1 px-4 py-2.5 text-sm bg-[#F3F4F6] focus:outline-none focus:ring-2
                                        focus:ring-[#2B3A8C] text-gray-700 placeholder:text-gray-400">
+
                             <div class="px-3 py-2.5 bg-[#2B3A8C] flex items-center">
                                 <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+                                    <path stroke-linecap="round" stroke-width="2"
+                                        d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
                         </div>
 
-                        <div id="selectedUnit" class="hidden mb-2 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
+                        <div id="selectedUnit"
+                            class="hidden mb-2 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
+
                             <div>
                                 <p class="text-sm font-semibold text-[#2B3A8C]" id="selectedUnitNama"></p>
                                 <p class="text-xs text-gray-400" id="selectedUnitKategori"></p>
                             </div>
-                            <button type="button" onclick="clearSelectedUnit()"
+
+                            <button type="button"
+                                onclick="clearSelectedUnit()"
                                 class="text-gray-400 hover:text-red-500 transition ml-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
                             </button>
                         </div>
@@ -97,14 +112,16 @@
                         <div id="unitListContainer"
                             class="hidden max-h-56 overflow-y-auto bg-[#F8FAFF] rounded-xl border border-blue-100 p-2">
 
-                            <div id="unitNotFound" class="hidden px-3 py-4 text-center text-sm text-gray-400">
+                            <div id="unitNotFound"
+                                class="hidden px-3 py-4 text-center text-sm text-gray-400">
                                 Unit tidak ditemukan
                             </div>
 
                             @php
-                                $grouped = $units->groupBy('kategori_unit');
+                                $grouped = $units->groupBy('kabid');
+
                                 $kategoriColor = [
-                                    'Kabid Keperawatan'    => 'bg-pink-50 text-pink-700 border-pink-200',
+                                    'Kabid Keperawatan' => 'bg-pink-50 text-pink-700 border-pink-200',
                                     'Kabid Pelayanan Medis' => 'bg-blue-50 text-blue-700 border-blue-200',
                                     'Kabid Penunjang Medis' => 'bg-purple-50 text-purple-700 border-purple-200',
                                     'Kabag Umum & Keuangan' => 'bg-green-50 text-green-700 border-green-200',
@@ -112,8 +129,9 @@
                             @endphp
 
                             @foreach($grouped as $kategori => $unitList)
-                            {{-- Header kategori --}}
+
                             <div class="kategori-group" data-kategori="{{ $kategori }}">
+
                                 <div class="px-2 py-1.5 mt-1 mb-1">
                                     <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border
                                         {{ $kategoriColor[$kategori] ?? 'bg-gray-100 text-gray-500 border-gray-200' }}">
@@ -122,103 +140,95 @@
                                 </div>
 
                                 @foreach($unitList as $u)
-                                <label data-kategori="{{ $u->kategori_unit }}"
-                                       data-nama="{{ strtolower($u->unit_kerja ?? '') }}"
-                                       data-display-nama="{{ $u->unit_kerja }}"
-                                       data-display-kategori="{{ $u->kategori_unit ?? '' }}"
-                                       class="unit-item flex items-center gap-2.5 p-2 rounded-lg hover:bg-blue-100 cursor-pointer transition ml-2">
-                                    <input type="radio" name="unit_id" value="{{ $u->id_user }}"
+
+                                <label
+                                    data-kategori="{{ $u->kabid }}"
+                                    data-nama="{{ strtolower($u->nama_unit ?? '') }}"
+                                    data-display-nama="{{ $u->nama_unit }}"
+                                    data-display-kategori="{{ $u->kabid ?? '' }}"
+                                    class="unit-item flex items-center gap-2.5 p-2 rounded-lg hover:bg-blue-100 cursor-pointer transition ml-2">
+
+                                    <input type="radio"
+                                        name="id_unit_kerja"
+                                        value="{{ $u->id_unit_kerja }}"
                                         class="unit-radio w-4 h-4 text-[#2B3A8C] focus:ring-[#2B3A8C]">
+
                                     <div class="flex-1">
-                                        <p class="text-xs font-semibold text-gray-700">{{ $u->unit_kerja }}</p>
+                                        <p class="text-xs font-semibold text-gray-700">
+                                            {{ $u->nama_unit }}
+                                        </p>
                                     </div>
                                 </label>
+
                                 @endforeach
                             </div>
+
                             @endforeach
                         </div>
 
-                        <input type="hidden" name="unit_kerja" id="unitKerjaHidden" value="{{ old('unit_kerja') }}">
-
-                        @error('unit_id')
-                            <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
+                        @error('id_unit_kerja')
+                            <p class="text-red-500 text-xs mt-1 ml-1">
+                                {{ $message }}
+                            </p>
                         @enderror
                     </div>
 
                     <div>
                         <label class="block text-gray-500 text-sm mb-1 ml-1">Role</label>
+
                         <div class="relative">
-                            <select name="role"
+
+                            <select name="id_role"
                                 class="w-full appearance-none bg-[#F3F4F6] rounded-xl
                                         py-3 pl-5 pr-10 text-gray-700
                                         focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+
                                 <option value="">Pilih Role</option>
-                                <option value="admin"      {{ old('role') == 'admin'      ? 'selected' : '' }}>Admin</option>
-                                <option value="sekretaris" {{ old('role') == 'sekretaris' ? 'selected' : '' }}>Sekretaris</option>
-                                <option value="karyawan"   {{ old('role') == 'karyawan'   ? 'selected' : '' }}>Karyawan</option>
-                                <option value="unit"       {{ old('role') == 'unit'       ? 'selected' : '' }}>Unit</option>
+
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id_role }}"
+                                        {{ old('id_role') == $role->id_role ? 'selected' : '' }}>
+                                        {{ $role->nama_role }}
+                                    </option>
+                                @endforeach
+
                             </select>
+
                             <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 9l-7 7-7-7"/>
                                 </svg>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
 
                     <div>
                         <label class="block text-gray-500 text-sm mb-1 ml-1">Password</label>
-                        <div class="relative">
-                            <input type="password" name="password" id="password"
-                                autocomplete="new-password"
-                                oninput="checkPasswordMatch()"
-                                class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 pr-12
-                                        [&::-ms-reveal]:hidden [&::-ms-clear]:hidden
-                                        focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
-                            <button type="button" onclick="togglePassword('password','eye-1')"
-                                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition p-0.5">
-                                <svg id="eye-1" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path class="eye-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path class="eye-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    <path class="eye-closed hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18M10.584 10.587a2 2 0 002.828 2.83M6.363 6.365C4.31 7.63 2.726 9.65 2 12c1.274 4.057 5.065 7 9.542 7 1.99 0 3.842-.574 5.393-1.563M9.032 4.18A10.16 10.16 0 0112 4c4.477 0 8.268 2.943 9.542 7a9.957 9.957 0 01-1.888 3.308"/>
-                                </svg>
-                            </button>
-                        </div>
+
+                        <input type="password"
+                            name="password"
+                            class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5
+                            focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
 
                     <div>
-                        <label class="block text-gray-500 text-sm mb-1 ml-1">Konfirmasi Password</label>
-                        <div class="relative">
-                            <input type="password" name="password_confirmation" id="password_confirmation"
-                                autocomplete="new-password"
-                                oninput="checkPasswordMatch()"
-                                class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 pr-12
-                                        [&::-ms-reveal]:hidden [&::-ms-clear]:hidden
-                                        focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
-                            <button type="button" onclick="togglePassword('password_confirmation','eye-2')"
-                                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition p-0.5">
-                                <svg id="eye-2" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path class="eye-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path class="eye-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    <path class="eye-closed hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18M10.584 10.587a2 2 0 002.828 2.83M6.363 6.365C4.31 7.63 2.726 9.65 2 12c1.274 4.057 5.065 7 9.542 7 1.99 0 3.842-.574 5.393-1.563M9.032 4.18A10.16 10.16 0 0112 4c4.477 0 8.268 2.943 9.542 7a9.957 9.957 0 01-1.888 3.308"/>
-                                </svg>
-                            </button>
-                        </div>
+                        <label class="block text-gray-500 text-sm mb-1 ml-1">
+                            Konfirmasi Password
+                        </label>
 
-                        <div id="msg-error" class="hidden mt-2 px-4 py-2.5 bg-red-100 text-red-700 rounded-xl flex items-center gap-2 text-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            Password dan konfirmasi password tidak cocok.
-                        </div>
-
-                        <div id="msg-ok" class="hidden mt-2 px-4 py-2.5 bg-green-100 text-green-700 rounded-xl flex items-center gap-2 text-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Password cocok.
-                        </div>
+                        <input type="password"
+                            name="password_confirmation"
+                            class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5
+                            focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
 
                     <div class="flex justify-center mt-10">
@@ -235,122 +245,83 @@
 </div>
 
 <script>
-const unitList     = document.getElementById('unitListContainer');
-const selectedBox  = document.getElementById('selectedUnit');
-const notFound     = document.getElementById('unitNotFound');
+const unitList = document.getElementById('unitListContainer');
+const selectedBox = document.getElementById('selectedUnit');
+const notFound = document.getElementById('unitNotFound');
 
-function searchUnitHandler(val) {
+function searchUnitHandler(val)
+{
     const q = val.trim().toLowerCase();
 
-    if (q === '') {
+    if(q === '')
+    {
         unitList.classList.add('hidden');
         return;
     }
 
     unitList.classList.remove('hidden');
 
-    const items   = document.querySelectorAll('.unit-item');
-    const groups  = document.querySelectorAll('.kategori-group');
-    let adaHasil  = false;
+    const items = document.querySelectorAll('.unit-item');
+    const groups = document.querySelectorAll('.kategori-group');
+
+    let adaHasil = false;
 
     items.forEach(item => {
-        const nama  = item.getAttribute('data-nama') || '';
+
+        const nama = item.getAttribute('data-nama') || '';
         const cocok = nama.includes(q);
+
         item.style.display = cocok ? '' : 'none';
-        if (cocok) adaHasil = true;
+
+        if(cocok) adaHasil = true;
     });
 
     groups.forEach(group => {
+
         const visibleItems = group.querySelectorAll('.unit-item:not([style*="none"])');
+
         group.style.display = visibleItems.length > 0 ? '' : 'none';
     });
 
     notFound.classList.toggle('hidden', adaHasil);
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function(){
+
     document.querySelectorAll('.unit-radio').forEach(radio => {
-        radio.addEventListener('change', function () {
-            const label       = this.closest('label');
-            const displayNama = label.getAttribute('data-display-nama');
-            const displayKat  = label.getAttribute('data-display-kategori');
-            const unitKerja   = label.querySelector('p.text-xs').textContent.trim();
 
-            document.getElementById('unitKerjaHidden').value = unitKerja;
+        radio.addEventListener('change', function(){
 
-            document.getElementById('selectedUnitNama').textContent     = displayNama;
-            document.getElementById('selectedUnitKategori').textContent  = displayKat;
+            const label = this.closest('label');
+
+            document.getElementById('selectedUnitNama').textContent =
+                label.getAttribute('data-display-nama');
+
+            document.getElementById('selectedUnitKategori').textContent =
+                label.getAttribute('data-display-kategori');
+
             selectedBox.classList.remove('hidden');
 
             unitList.classList.add('hidden');
+
             document.getElementById('searchUnit').value = '';
         });
     });
 });
 
-function clearSelectedUnit() {
-    document.getElementById('unitKerjaHidden').value = '';
+function clearSelectedUnit()
+{
     document.querySelectorAll('.unit-radio').forEach(r => r.checked = false);
+
     selectedBox.classList.add('hidden');
-    document.getElementById('selectedUnitNama').textContent    = '';
+
+    document.getElementById('selectedUnitNama').textContent = '';
     document.getElementById('selectedUnitKategori').textContent = '';
+
     document.getElementById('searchUnit').value = '';
+
     unitList.classList.add('hidden');
-
 }
-
-function togglePassword(inputId, svgId) {
-    const input      = document.getElementById(inputId);
-    const svg        = document.getElementById(svgId);
-    const openPaths  = svg.querySelectorAll('.eye-open');
-    const closedPath = svg.querySelector('.eye-closed');
-    if (input.type === 'password') {
-        input.type = 'text';
-        openPaths.forEach(p => p.classList.add('hidden'));
-        closedPath.classList.remove('hidden');
-    } else {
-        input.type = 'password';
-        openPaths.forEach(p => p.classList.remove('hidden'));
-        closedPath.classList.add('hidden');
-    }
-}
-
-function checkPasswordMatch() {
-    const pw      = document.getElementById('password').value;
-    const confirm = document.getElementById('password_confirmation').value;
-    const errDiv  = document.getElementById('msg-error');
-    const okDiv   = document.getElementById('msg-ok');
-    const cfInput = document.getElementById('password_confirmation');
-
-    if (confirm === '') {
-        errDiv.classList.add('hidden');
-        okDiv.classList.add('hidden');
-        cfInput.classList.remove('ring-2','ring-red-400','ring-green-400');
-        return;
-    }
-    if (pw !== confirm) {
-        errDiv.classList.remove('hidden');
-        okDiv.classList.add('hidden');
-        cfInput.classList.add('ring-2','ring-red-400');
-        cfInput.classList.remove('ring-green-400');
-    } else {
-        errDiv.classList.add('hidden');
-        okDiv.classList.remove('hidden');
-        cfInput.classList.add('ring-2','ring-green-400');
-        cfInput.classList.remove('ring-red-400');
-    }
-}
-
-document.getElementById('formTambahAkun').addEventListener('submit', function (e) {
-    const pw      = document.getElementById('password').value;
-    const confirm = document.getElementById('password_confirmation').value;
-    if (pw !== confirm) {
-        e.preventDefault();
-        document.getElementById('msg-error').classList.remove('hidden');
-        document.getElementById('msg-ok').classList.add('hidden');
-        document.getElementById('password_confirmation').focus();
-    }
-});
 </script>
 
 @endsection

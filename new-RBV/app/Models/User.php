@@ -12,17 +12,13 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable;
 
     protected $table = 'users';
-
     protected $primaryKey = 'id_user';
-
     public $incrementing = true;
-
     protected $keyType = 'int';
-
     protected $fillable = [
         'NIK',
         'nama_lengkap',
-        'jabatan',
+        'id_jabatan',
         'id_role',
         'id_unit_kerja',
         'password',
@@ -45,6 +41,7 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [
+
             'role' => $this->role,
         ];
     }
@@ -69,6 +66,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->unitKerjaRelation?->nama_unit;
     }
 
+    public function jabatanRelation()
+    {
+        return $this->belongsTo(Jabatan::class, 'id_jabatan');
+    }
+
+    public function getJabatanAttribute()
+    {
+        return $this->jabatanRelation?->nama_jabatan;
+    }
+
     public function favorites()
     {
         return $this->hasMany(Favorite::class, 'id_user');
@@ -77,7 +84,9 @@ class User extends Authenticatable implements JWTSubject
     public function hasRole($roles)
     {
         return in_array(
+
             $this->role,
+
             (array) $roles
         );
     }

@@ -10,24 +10,28 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
 
+            // PRIMARY KEY
             $table->id('id_user');
             $table->string('NIK')->unique();
             $table->string('nama_lengkap');
-            $table->string('jabatan')->nullable();
-
-
             $table->unsignedBigInteger('id_role');
+            $table->unsignedBigInteger('id_jabatan')->nullable();
             $table->unsignedBigInteger('id_unit_kerja')->nullable();
-
             $table->string('password');
 
             $table->rememberToken();
+
             $table->timestamps();
 
             $table->foreign('id_role')
                 ->references('id_role')
                 ->on('roles')
                 ->onDelete('cascade');
+
+            $table->foreign('id_jabatan')
+                ->references('id_jabatan')
+                ->on('jabatans')
+                ->onDelete('set null');
 
             $table->foreign('id_unit_kerja')
                 ->references('id_unit_kerja')
