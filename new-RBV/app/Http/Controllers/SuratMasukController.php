@@ -401,7 +401,7 @@ class SuratMasukController extends Controller
             (object) ['id_user' => 15, 'nama_lengkap' => 'Staff IT Doni',   'unit_kerja' => 'Unit Informasi & TI',     'kategori_unit' => 'Kabag Umum & Keuangan'],
         ]);
 
-        return view('pages.E-Office.SuratMasuk.suratmasuk_show', compact(
+        return view('pages.E-Office.SuratMasuk.suratmasuk_show','pages.KelolahAkun.tambah_akun' compact(
             'surat', 'bisaApprove', 'jabatanApproval', 'unitsTerkait'
         ));
     }
