@@ -61,12 +61,23 @@
                             class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                         <p class="text-[10px] text-gray-400 mt-1 ml-1">No/RSCH/Kode/BulanRomawi/Tahun</p>
                     </div>
-                    <div>
-                        <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">Asal Surat <span class="text-red-500">*</span></label>
-                        <input type="text" name="asal_surat" value="{{ old('asal_surat') }}"
-                            required placeholder="Contoh: Dinas Kesehatan / Unit Keuangan"
-                            class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
-                    </div>
+                    @if(in_array(auth()->user()->role, ['unit','karyawan']) || auth()->user()->jabatan === 'kepala unit')
+                        <input type="hidden" name="asal_surat" value="{{ auth()->user()->unit_kerja }}">
+                        <div>
+                            <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">Asal Surat</label>
+                            <div class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-gray-700 text-sm">
+                                {{ auth()->user()->unit_kerja }}
+                                <span class="text-xs text-gray-400">(otomatis)</span>
+                            </div>
+                        </div>
+                    @else
+                        <div>
+                            <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">Asal Surat <span class="text-red-500">*</span></label>
+                            <input type="text" name="asal_surat" value="{{ old('asal_surat') }}"
+                                required placeholder="Contoh: Dinas Kesehatan / Unit Keuangan"
+                                class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                        </div>
+                    @endif
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -80,14 +91,27 @@
                         <input type="date" name="tanggal_masuk" value="{{ date('Y-m-d') }}"
                             class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
-                    <div>
-                        <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">Jenis Surat</label>
-                        <select name="jenis" required
-                            class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
-                            <option value="external">Eksternal (Luar RS)</option>
-                            <option value="internal">Internal (Antar Unit)</option>
-                        </select>
-                    </div>
+                    {{-- @if(in_array(auth()->user()->role, ['kepala unit','karyawan'])) --}}
+                    @if(in_array(auth()->user()->role, ['unit','karyawan']) || auth()->user()->jabatan === 'kepala unit')
+                        <input type="hidden" name="jenis" value="internal">
+                        <div>
+                            <label class="block text-gray-500 text-sm mb-1 ml-1">Jenis Surat</label>
+                            <div class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-gray-400 text-sm">
+                                Internal <span class="text-xs text-gray-400">(otomatis)</span>
+                            </div>
+                        </div>
+                    @else
+                        <div>
+                            <label class="block text-gray-500 text-sm mb-1 ml-1">Jenis Surat</label>
+                            <select name="jenis"
+                                class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                                <option value="">Semua Jenis</option>
+                                <option value="internal" {{ request('jenis') == 'internal' ? 'selected' : '' }}>Internal</option>
+                                <option value="external" {{ request('jenis') == 'external' ? 'selected' : '' }}>Eksternal</option>
+                            </select>
+                        </div>
+                    @endif
                 </div>
 
                 <div>
@@ -96,7 +120,8 @@
                         class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] resize-none"></textarea>
                 </div>
 
-                @if(!in_array(auth()->user()->role, ['unit','karyawan']))
+                {{-- @if(!in_array(auth()->user()->role, ['Kepala Unit'])) --}}
+                @if(in_array(auth()->user()->role, ['unit','karyawan']) || auth()->user()->jabatan === 'kepala unit')
                 <div>
                     <label class="block text-gray-700 font-bold text-xs sm:text-sm mb-3 ml-1">
                         Disposisi ke
