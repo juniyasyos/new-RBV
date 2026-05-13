@@ -3,6 +3,7 @@
 @section('content')
 <div class="bg-[#F5F7FB] min-h-screen py-16 flex items-center justify-center">
     <div class="max-w-2xl w-full px-6">
+        
         <div class="mb-6">
             <a href="{{ route('akun.index') }}"
             class="inline-flex items-center justify-center w-10 h-10 rounded-full
@@ -58,73 +59,73 @@
                             class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
 
-<div>
+                    <div>
 
-    <label class="block text-gray-500 text-sm mb-1 ml-1">Jabatan</label>
+                        <label class="block text-gray-500 text-sm mb-1 ml-1">Jabatan</label>
 
-    <div class="relative">
+                        <div class="relative">
 
-        <select name="id_jabatan"
+                            <select name="id_jabatan"
 
-            class="w-full appearance-none bg-[#F3F4F6] rounded-xl
+                                class="w-full appearance-none bg-[#F3F4F6] rounded-xl
 
-                    py-3 pl-5 pr-10 text-gray-700
+                                        py-3 pl-5 pr-10 text-gray-700
 
-                    focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                                        focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
 
-            <option value="">Pilih Jabatan</option>
+                                <option value="">Pilih Jabatan</option>
 
-            @foreach($jabatans as $jabatan)
+                                @foreach($jabatans as $jabatan)
 
-                <option value="{{ $jabatan->id_jabatan }}"
+                                    <option value="{{ $jabatan->id_jabatan }}"
 
-                    {{ old('id_jabatan') == $jabatan->id_jabatan ? 'selected' : '' }}>
+                                        {{ old('id_jabatan') == $jabatan->id_jabatan ? 'selected' : '' }}>
 
-                    {{ $jabatan->nama_jabatan }}
+                                        {{ $jabatan->nama_jabatan }}
 
-                </option>
+                                    </option>
 
-            @endforeach
+                                @endforeach
 
-        </select>
+                            </select>
 
-        <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+                            <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
 
-            <svg xmlns="http://www.w3.org/2000/svg"
+                                <svg xmlns="http://www.w3.org/2000/svg"
 
-                class="w-4 h-4"
+                                    class="w-4 h-4"
 
-                fill="none"
+                                    fill="none"
 
-                viewBox="0 0 24 24"
+                                    viewBox="0 0 24 24"
 
-                stroke="currentColor">
+                                    stroke="currentColor">
 
-                <path stroke-linecap="round"
+                                    <path stroke-linecap="round"
 
-                    stroke-linejoin="round"
+                                        stroke-linejoin="round"
 
-                    stroke-width="2"
+                                        stroke-width="2"
 
-                    d="M19 9l-7 7-7-7"/>
+                                        d="M19 9l-7 7-7-7"/>
 
-            </svg>
+                                </svg>
 
-        </div>
+                            </div>
 
-    </div>
+                        </div>
 
-    @error('id_jabatan')
+                        @error('id_jabatan')
 
-        <p class="text-red-500 text-xs mt-1 ml-1">
+                            <p class="text-red-500 text-xs mt-1 ml-1">
 
-            {{ $message }}
+                                {{ $message }}
 
-        </p>
+                            </p>
 
-    @enderror
+                        @enderror
 
-</div>
+                    </div>
 
                     <div class="mb-5">
                         <label class="block text-gray-500 text-sm mb-1 ml-1">Unit Kerja</label>
@@ -273,31 +274,132 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-gray-500 text-sm mb-1 ml-1">Password</label>
+                     <div>
 
-                        <input type="password"
-                            name="password"
-                            class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5
-                            focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                        <label class="block text-gray-500 text-sm mb-1 ml-1">
+
+                            Password
+                            <span class="text-gray-400 font-normal text-xs">
+                                (Kosongkan jika tidak ingin mengubah)
+                            </span>
+
+                        </label>
+
+                        <div class="relative">
+
+                            <input type="password"
+                                name="password"
+                                id="password"
+                                autocomplete="new-password"
+                                oninput="checkPasswordMatch()"
+                                placeholder="Password baru (opsional)"
+                                class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 pr-12
+                                [&::-ms-reveal]:hidden [&::-ms-clear]:hidden
+                                focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+
+                            <button type="button"
+                                onclick="togglePassword('password','eye-1')"
+                                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition p-0.5">
+
+                                <svg id="eye-1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-5 h-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path class="eye-open"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+
+                                    <path class="eye-open"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5
+                                        12 5c4.478 0 8.268 2.943
+                                        9.542 7-1.274 4.057-5.064
+                                        7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+
+                            </button>
+
+                        </div>
                     </div>
 
                     <div>
+
                         <label class="block text-gray-500 text-sm mb-1 ml-1">
                             Konfirmasi Password
                         </label>
 
-                        <input type="password"
-                            name="password_confirmation"
-                            class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5
-                            focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                        <div class="relative">
+
+                            <input type="password"
+                                name="password_confirmation"
+                                id="password_confirmation"
+                                autocomplete="new-password"
+                                oninput="checkPasswordMatch()"
+                                placeholder="Ulangi password baru"
+                                class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 pr-12
+                                [&::-ms-reveal]:hidden [&::-ms-clear]:hidden
+                                focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+
+                            <button type="button"
+                                onclick="togglePassword('password_confirmation','eye-2')"
+                                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition p-0.5">
+
+                                <svg id="eye-2"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-5 h-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path class="eye-open"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+
+                                    <path class="eye-open"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5
+                                        12 5c4.478 0 8.268 2.943
+                                        9.542 7-1.274 4.057-5.064
+                                        7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+
+                            </button>
+
+                        </div>
+
+                        <div id="msg-error"
+                            class="hidden mt-2 px-4 py-2.5 bg-red-100 text-red-700 rounded-xl flex items-center gap-2 text-sm">
+
+                            Password dan konfirmasi password tidak cocok.
+                        </div>
+
+                        <div id="msg-ok"
+                            class="hidden mt-2 px-4 py-2.5 bg-green-100 text-green-700 rounded-xl flex items-center gap-2 text-sm">
+
+                            Password cocok.
+                        </div>
+
                     </div>
 
                     <div class="flex justify-center mt-10">
+
                         <button type="submit"
                             class="bg-[#2B3A8C] text-white font-bold py-3 px-12 rounded-lg hover:bg-blue-800 transition">
+
                             Simpan
                         </button>
+
                     </div>
 
                 </div>
@@ -310,6 +412,70 @@
 const unitList = document.getElementById('unitListContainer');
 const selectedBox = document.getElementById('selectedUnit');
 const notFound = document.getElementById('unitNotFound');
+
+function togglePassword(inputId, svgId) {
+
+    const input = document.getElementById(inputId);
+
+    if (input.type === 'password') {
+        input.type = 'text';
+    } else {
+        input.type = 'password';
+    }
+}
+
+function checkPasswordMatch() {
+
+    const pw = document.getElementById('password').value;
+    const confirm = document.getElementById('password_confirmation').value;
+
+    const errDiv = document.getElementById('msg-error');
+    const okDiv = document.getElementById('msg-ok');
+
+    if (pw === '' && confirm === '') {
+
+        errDiv.classList.add('hidden');
+        okDiv.classList.add('hidden');
+
+        return;
+    }
+
+    if (confirm === '') {
+
+        errDiv.classList.add('hidden');
+        okDiv.classList.add('hidden');
+
+        return;
+    }
+
+    if (pw !== confirm) {
+
+        errDiv.classList.remove('hidden');
+        okDiv.classList.add('hidden');
+
+    } else {
+
+        errDiv.classList.add('hidden');
+        okDiv.classList.remove('hidden');
+    }
+}
+document.getElementById('formEditAkun')
+.addEventListener('submit', function (e) {
+
+    const pw = document.getElementById('password').value;
+    const confirm = document.getElementById('password_confirmation').value;
+
+    if (pw !== '' && pw !== confirm) {
+
+        e.preventDefault();
+
+        document.getElementById('msg-error')
+        .classList.remove('hidden');
+
+        document.getElementById('msg-ok')
+        .classList.add('hidden');
+    }
+});
 
 function searchUnitHandler(val)
 {

@@ -106,41 +106,180 @@
                     </div>
 
                     <div>
-                        <label class="block text-gray-500 text-sm mb-1 ml-1">
-                            Jabatan
-                        </label>
 
-                        <input type="text"
-                            name="jabatan"
-                            value="{{ old('jabatan', $user->jabatan) }}"
-                            class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5
-                            focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                        <label class="block text-gray-500 text-sm mb-1 ml-1">Jabatan</label>
+
+                        <div class="relative">
+
+                            <select name="id_jabatan"
+
+                                class="w-full appearance-none bg-[#F3F4F6] rounded-xl
+
+                                        py-3 pl-5 pr-10 text-gray-700
+
+                                        focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+
+                                <option value="">Pilih Jabatan</option>
+
+                                @foreach($jabatans as $jabatan)
+
+                                    <option value="{{ $jabatan->id_jabatan }}"
+
+                                        {{ old('id_jabatan') == $jabatan->id_jabatan ? 'selected' : '' }}>
+
+                                        {{ $jabatan->nama_jabatan }}
+
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                            <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+
+                                    class="w-4 h-4"
+
+                                    fill="none"
+
+                                    viewBox="0 0 24 24"
+
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+
+                                        stroke-linejoin="round"
+
+                                        stroke-width="2"
+
+                                        d="M19 9l-7 7-7-7"/>
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                        @error('id_jabatan')
+
+                            <p class="text-red-500 text-xs mt-1 ml-1">
+
+                                {{ $message }}
+
+                            </p>
+
+                        @enderror
+
                     </div>
 
-                    <div>
-                        <label class="block text-gray-500 text-sm mb-1 ml-1">
-                            Unit Kerja
-                        </label>
+                    <div class="mb-5">
+                        <label class="block text-gray-500 text-sm mb-1 ml-1">Unit Kerja</label>
 
-                        <select name="id_unit_kerja"
-                            class="w-full appearance-none bg-[#F3F4F6] rounded-xl
-                            py-3 px-5 text-gray-700
-                            focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                        <div class="flex rounded-xl overflow-hidden border border-gray-200 mb-2">
+                            <input type="text" id="searchUnit"
+                                oninput="searchUnitHandler(this.value)"
+                                placeholder="Ketik untuk mencari unit..."
+                                autocomplete="off"
+                                class="flex-1 px-4 py-2.5 text-sm bg-[#F3F4F6] focus:outline-none focus:ring-2
+                                       focus:ring-[#2B3A8C] text-gray-700 placeholder:text-gray-400">
 
-                            <option value="">Pilih Unit Kerja</option>
+                            <div class="px-3 py-2.5 bg-[#2B3A8C] flex items-center">
+                                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-width="2"
+                                        d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+                                </svg>
+                            </div>
+                        </div>
 
-                            @foreach($unitKerjas as $unit)
+                        <div id="selectedUnit"
+                            class="hidden mb-2 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
 
-                            <option value="{{ $unit->id_unit_kerja }}"
-                                {{ old('id_unit_kerja', $user->id_unit_kerja) == $unit->id_unit_kerja ? 'selected' : '' }}>
+                            <div>
+                                <p class="text-sm font-semibold text-[#2B3A8C]" id="selectedUnitNama"></p>
+                                <p class="text-xs text-gray-400" id="selectedUnitKategori"></p>
+                            </div>
 
-                                {{ $unit->nama_unit }}
+                            <button type="button"
+                                onclick="clearSelectedUnit()"
+                                class="text-gray-400 hover:text-red-500 transition ml-3">
 
-                            </option>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div id="unitListContainer"
+                            class="hidden max-h-56 overflow-y-auto bg-[#F8FAFF] rounded-xl border border-blue-100 p-2">
+
+                            <div id="unitNotFound"
+                                class="hidden px-3 py-4 text-center text-sm text-gray-400">
+                                Unit tidak ditemukan
+                            </div>
+
+                            @php
+                                $grouped = $unitKerjas->groupBy('kabid');
+
+                                $kategoriColor = [
+                                    'Kabid Keperawatan' => 'bg-pink-50 text-pink-700 border-pink-200',
+                                    'Kabid Pelayanan Medis' => 'bg-blue-50 text-blue-700 border-blue-200',
+                                    'Kabid Penunjang Medis' => 'bg-purple-50 text-purple-700 border-purple-200',
+                                    'Kabag Umum & Keuangan' => 'bg-green-50 text-green-700 border-green-200',
+                                ];
+                            @endphp
+
+                            @foreach($grouped as $kategori => $unitList)
+
+                            <div class="kategori-group" data-kategori="{{ $kategori }}">
+
+                                <div class="px-2 py-1.5 mt-1 mb-1">
+                                    <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border
+                                        {{ $kategoriColor[$kategori] ?? 'bg-gray-100 text-gray-500 border-gray-200' }}">
+                                        {{ $kategori }}
+                                    </span>
+                                </div>
+
+                                @foreach($unitList as $u)
+
+                                <label
+                                    data-kategori="{{ $u->kabid }}"
+                                    data-nama="{{ strtolower($u->nama_unit ?? '') }}"
+                                    data-display-nama="{{ $u->nama_unit }}"
+                                    data-display-kategori="{{ $u->kabid ?? '' }}"
+                                    class="unit-item flex items-center gap-2.5 p-2 rounded-lg hover:bg-blue-100 cursor-pointer transition ml-2">
+
+                                    <input type="radio"
+                                        name="id_unit_kerja"
+                                        value="{{ $u->id_unit_kerja }}"
+                                        class="unit-radio w-4 h-4 text-[#2B3A8C] focus:ring-[#2B3A8C]">
+
+                                    <div class="flex-1">
+                                        <p class="text-xs font-semibold text-gray-700">
+                                            {{ $u->nama_unit }}
+                                        </p>
+                                    </div>
+                                </label>
+
+                                @endforeach
+                            </div>
 
                             @endforeach
+                        </div>
 
-                        </select>
+                        @error('id_unit_kerja')
+                            <p class="text-red-500 text-xs mt-1 ml-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
 
                     <div>
@@ -322,6 +461,82 @@
 </div>
 
 <script>
+const unitList = document.getElementById('unitListContainer');
+const selectedBox = document.getElementById('selectedUnit');
+const notFound = document.getElementById('unitNotFound');
+function searchUnitHandler(val)
+{
+    const q = val.trim().toLowerCase();
+
+    if(q === '')
+    {
+        unitList.classList.add('hidden');
+        return;
+    }
+
+    unitList.classList.remove('hidden');
+
+    const items = document.querySelectorAll('.unit-item');
+    const groups = document.querySelectorAll('.kategori-group');
+
+    let adaHasil = false;
+
+    items.forEach(item => {
+
+        const nama = item.getAttribute('data-nama') || '';
+        const cocok = nama.includes(q);
+
+        item.style.display = cocok ? '' : 'none';
+
+        if(cocok) adaHasil = true;
+    });
+
+    groups.forEach(group => {
+
+        const visibleItems = group.querySelectorAll('.unit-item:not([style*="none"])');
+
+        group.style.display = visibleItems.length > 0 ? '' : 'none';
+    });
+
+    notFound.classList.toggle('hidden', adaHasil);
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+
+    document.querySelectorAll('.unit-radio').forEach(radio => {
+
+        radio.addEventListener('change', function(){
+
+            const label = this.closest('label');
+
+            document.getElementById('selectedUnitNama').textContent =
+                label.getAttribute('data-display-nama');
+
+            document.getElementById('selectedUnitKategori').textContent =
+                label.getAttribute('data-display-kategori');
+
+            selectedBox.classList.remove('hidden');
+
+            unitList.classList.add('hidden');
+
+            document.getElementById('searchUnit').value = '';
+        });
+    });
+});
+
+function clearSelectedUnit()
+{
+    document.querySelectorAll('.unit-radio').forEach(r => r.checked = false);
+
+    selectedBox.classList.add('hidden');
+
+    document.getElementById('selectedUnitNama').textContent = '';
+    document.getElementById('selectedUnitKategori').textContent = '';
+
+    document.getElementById('searchUnit').value = '';
+
+    unitList.classList.add('hidden');
+}
 function togglePassword(inputId, svgId) {
 
     const input = document.getElementById(inputId);
