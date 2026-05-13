@@ -1,9 +1,5 @@
 <?php
 
-// ============================================================
-// app/Models/SuratMasuk.php
-// ============================================================
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -14,9 +10,19 @@ class SuratMasuk extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'nomor_agenda', 'nomor_surat', 'tanggal_surat', 'tanggal_masuk',
-        'asal_surat', 'perihal', 'jenis', 'prioritas', 'catatan',
-        'file_scan', 'status', 'catatan_tolak', 'dibuat_oleh',
+        'nomor_agenda',
+        'nomor_surat',
+        'tanggal_surat',
+        'tanggal_masuk',
+        'asal_surat',
+        'perihal',
+        'jenis',
+        'prioritas',
+        'catatan',
+        'file_scan',
+        'status',
+        'catatan_tolak',
+        'dibuat_oleh',
     ];
 
     protected $casts = [
@@ -24,36 +30,95 @@ class SuratMasuk extends Model
         'tanggal_masuk' => 'datetime',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | PEMBUAT
+    |--------------------------------------------------------------------------
+    */
+
     public function pembuat()
     {
-        return $this->belongsTo(User::class, 'dibuat_oleh');
+        return $this->belongsTo(
+            User::class,
+            'dibuat_oleh',
+            'id_user'
+        );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | TAG SURAT
+    |--------------------------------------------------------------------------
+    */
 
     public function tags()
     {
-        return $this->morphMany(SuratTag::class, 'surat');
+        return $this->morphMany(
+            SuratTag::class,
+            'surat'
+        );
     }
 
-    public function persetujuan()
+    /*
+    |--------------------------------------------------------------------------
+    | PERSETUJUAN
+    |--------------------------------------------------------------------------
+    */
+
+    public function persetujuans()
     {
-        return $this->morphMany(Persetujuan::class, 'surat');
+        return $this->morphMany(
+            Persetujuan::class,
+            'surat'
+        );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | TRACKING
+    |--------------------------------------------------------------------------
+    */
 
     public function tracking()
     {
-        return $this->morphMany(TrackingSurat::class, 'surat');
+        return $this->morphMany(
+            TrackingSurat::class,
+            'surat'
+        );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | NOTIFIKASI
+    |--------------------------------------------------------------------------
+    */
 
     public function notifikasi()
     {
-        return $this->morphMany(Notifikasi::class, 'surat');
+        return $this->morphMany(
+            Notifikasi::class,
+            'surat'
+        );
     }
 
-    // User yang di-tag pada surat ini
+    /*
+    |--------------------------------------------------------------------------
+    | PENERIMA TAG
+    |--------------------------------------------------------------------------
+    */
+
     public function penerima()
     {
-        return $this->hasManyThrough(User::class, SuratTag::class,
-            'surat_id', 'id', 'id', 'user_id')
-            ->where('surat_tags.surat_type', self::class);
+        return $this->hasManyThrough(
+            User::class,
+            SuratTag::class,
+            'surat_id',
+            'id_user',
+            'id',
+            'user_id'
+        )->where(
+            'surat_tags.surat_type',
+            self::class
+        );
     }
 }
