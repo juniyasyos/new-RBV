@@ -58,11 +58,12 @@
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="text-gray-400 border-b border-gray-50 text-xs uppercase tracking-widest">
-                            <th class="text-left px-4 py-4 font-bold w-12">No.</th>
+                            {{-- <th class="text-left px-4 py-4 font-bold w-12">No.</th> --}}
+                            <th class="text-left px-4 py-4 font-bold">Tanggal</th>
                             <th class="text-left px-4 py-4 font-bold">No. Surat</th>
-                            <th class="text-left px-4 py-4 font-bold">Tgl Keluar</th>
-                            <th class="text-left px-4 py-4 font-bold">Tujuan</th>
+                            <th class="text-left px-4 py-4 font-bold">Ditujukan Kepada</th>
                             <th class="text-left px-4 py-4 font-bold">Perihal</th>
+                            <th class="text-left px-4 py-4 font-bold">Keterangan</th>
                             <th class="text-center px-4 py-4 font-bold">Aksi</th>
                         </tr>
                     </thead>
@@ -70,14 +71,14 @@
                         @forelse($suratKeluar as $surat)
                         <tr class="hover:bg-[#F8FAFF] transition">
 
-                            <td class="px-4 py-5 text-gray-400">{{ $loop->iteration }}</td>
-
-                            <td class="px-4 py-5 font-mono font-bold text-[#2B3A8C]">
-                                {{ $surat->nomor_surat }}
-                            </td>
+                            {{-- <td class="px-4 py-5 text-gray-400">{{ $loop->iteration }}</td> --}}
 
                             <td class="px-4 py-5 text-gray-500 whitespace-nowrap">
                                 {{ \Carbon\Carbon::parse($surat->tanggal_keluar)->format('d/m/Y') }}
+                            </td>
+
+                            <td class="px-4 py-5 font-mono font-bold text-[#2B3A8C]">
+                                {{ $surat->nomor_surat }}
                             </td>
 
                             <td class="px-4 py-5 text-gray-700 font-medium">
@@ -86,6 +87,10 @@
 
                             <td class="px-4 py-5 text-gray-600 truncate max-w-xs">
                                 {{ $surat->perihal }}
+                            </td>
+
+                            <td class="px-4 py-5 text-gray-600 truncate max-w-xs">
+                                {{ $surat->keterangan }}
                             </td>
 
                             <td class="px-4 py-5">

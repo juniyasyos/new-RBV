@@ -270,7 +270,7 @@
                 <div class="grid grid-cols-2 gap-3">
 
                     <form action="{{ route('eoffice.surat-masuk.tolak', $surat->id) }}" method="POST"
-                        onsubmit="return transferCatatan(this,'catatan_tolak') && confirm('Tolak surat ini?')">
+                        onsubmit="return konfirmasiTolak(this)">
                         @csrf
                         <input type="hidden" name="catatan_tolak">
                         <button type="submit"
@@ -284,7 +284,7 @@
                     </form>
 
                     <form action="{{ route('eoffice.surat-masuk.setujui', $surat->id) }}" method="POST"
-                        onsubmit="return konfirmasiSetuju() && transferCatatanDanUnit(this)">
+                        onsubmit="return konfirmasiSetuju(this)">
                         @csrf
                         <input type="hidden" name="catatan">
                         <div id="tagUnitsContainer"></div>
@@ -302,45 +302,93 @@
                 @endif
 
                 @if($jabatanApproval === 'kabag')
-                <div class="flex items-center gap-3">
+                    <div class="grid grid-cols-3 gap-3">
 
-                    <form action="{{ route('eoffice.surat-masuk.tolak', $surat->id) }}" method="POST"
-                          onsubmit="return transferCatatan(this,'catatan_tolak') && confirm('Tolak surat ini?')">
-                        @csrf
-                        <input type="hidden" name="catatan_tolak">
-                        <button type="submit"
-                            class="p-1.5 bg-red-600 text-white rounded-lg shadow hover:scale-110 transition"
-                            title="Tolak Surat">
-                            <img src="{{ asset('images/Tolak.svg') }}" class="w-4 h-4"
-                                 onerror="this.outerHTML='<svg xmlns='http://www.w3.org/2000/svg' class='w-4 h-4' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 18L18 6M6 6l12 12'/></svg>'">
-                        </button>
-                    </form>
+                        {{-- TOLAK --}}
+                        <form action="{{ route('eoffice.surat-masuk.tolak', $surat->id) }}"
+                            method="POST"
+                            onsubmit="return konfirmasiTolak(this)">
+                            @csrf
 
-                    <form action="{{ route('eoffice.surat-masuk.pending', $surat->id) }}" method="POST"
-                          onsubmit="return transferCatatan(this,'catatan_pending')">
-                        @csrf
-                        <input type="hidden" name="catatan_pending">
-                        <button type="submit"
-                            class="p-1.5 bg-yellow-500 text-white rounded-lg shadow hover:scale-110 transition"
-                            title="Pending">
-                            <img src="{{ asset('images/Pending.svg') }}" class="w-4 h-4"
-                                 onerror="this.outerHTML='<svg xmlns='http://www.w3.org/2000/svg' class='w-4 h-4' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'/></svg>'">
-                        </button>
-                    </form>
+                            <input type="hidden" name="catatan_tolak">
 
-                    <form action="{{ route('eoffice.surat-masuk.setujui', $surat->id) }}" method="POST"
-                        onsubmit="return konfirmasiSetuju() && transferCatatan(this,'catatan')">
-                        @csrf
-                        <input type="hidden" name="catatan">
-                        <button type="submit"
-                            class="p-1.5 bg-[#00A14C] text-white rounded-lg shadow hover:scale-110 transition"
-                            title="Setujui Surat">
-                            <img src="{{ asset('images/Approve.svg') }}" class="w-4 h-4"
-                                 onerror="this.outerHTML='<svg xmlns='http://www.w3.org/2000/svg' class='w-4 h-4' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M5 13l4 4L19 7'/></svg>'">
-                        </button>
-                    </form>
+                            <button type="submit"
+                                class="w-full py-3 bg-red-600 text-white rounded-xl
+                                    hover:bg-red-700 transition-all duration-200
+                                    flex items-center justify-center gap-2 font-bold text-sm shadow-sm hover:shadow-lg">
 
-                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+
+                                Tolak
+                            </button>
+                        </form>
+
+                        {{-- PENDING --}}
+                        <form action="{{ route('eoffice.surat-masuk.pending', $surat->id) }}"
+                            method="POST"
+                            onsubmit="return konfirmasiPending(this)">
+                            @csrf
+
+                            <input type="hidden" name="catatan_pending">
+
+                            <button type="submit"
+                                class="w-full py-3 bg-yellow-500 text-white rounded-xl
+                                    hover:bg-yellow-600 transition-all duration-200
+                                    flex items-center justify-center gap-2 font-bold text-sm shadow-sm hover:shadow-lg">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+
+                                Pending
+                            </button>
+                        </form>
+
+                        {{-- SETUJUI --}}
+                        <form action="{{ route('eoffice.surat-masuk.setujui', $surat->id) }}"
+                            method="POST"
+                            onsubmit="return konfirmasiSetuju(this)">
+                            @csrf
+
+                            <input type="hidden" name="catatan">
+
+                            <button type="submit"
+                                class="w-full py-3 bg-[#00A14C] text-white rounded-xl
+                                    hover:bg-green-700 transition-all duration-200
+                                    flex items-center justify-center gap-2 font-bold text-sm shadow-sm hover:shadow-lg">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2.5"
+                                        d="M5 13l4 4L19 7"/>
+                                </svg>
+
+                                Setuju
+                            </button>
+                        </form>
+
+                    </div>
                 @endif
 
             </div>
@@ -515,13 +563,120 @@
             </div>
         </div>
     </div>
+    <div id="modalTolak" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onclick="tutupModalTolak()"></div>
+
+        <div class="relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 z-10">
+
+            <div class="flex flex-col items-center text-center gap-4">
+
+                <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="w-7 h-7 text-red-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2.5"
+                            d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <h3 class="font-poppins font-bold text-gray-800 text-lg">
+                        Konfirmasi Penolakan
+                    </h3>
+
+                    <p class="text-gray-500 text-sm mt-1">
+                        Apakah Anda yakin ingin menolak surat ini?
+                    </p>
+                </div>
+
+                <div class="flex gap-3 w-full mt-2">
+
+                    <button type="button"
+                        onclick="tutupModalTolak()"
+                        class="flex-1 py-2.5 bg-gray-100 text-gray-600 text-sm font-bold rounded-xl hover:bg-gray-200 transition">
+                        Batal
+                    </button>
+
+                    <button type="button"
+                        id="btnKonfirmasiTolak"
+                        class="flex-1 py-2.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition">
+                        Ya, Tolak
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div id="modalPending" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onclick="tutupModalPending()"></div>
+
+        <div class="relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 z-10">
+
+            <div class="flex flex-col items-center text-center gap-4">
+
+                <div class="w-14 h-14 rounded-full bg-yellow-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="w-7 h-7 text-yellow-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <h3 class="font-poppins font-bold text-gray-800 text-lg">
+                        Konfirmasi Pending
+                    </h3>
+
+                    <p class="text-gray-500 text-sm mt-1">
+                        Apakah surat ini ingin dijadikan pending?
+                    </p>
+                </div>
+
+                <div class="flex gap-3 w-full mt-2">
+
+                    <button type="button"
+                        onclick="tutupModalPending()"
+                        class="flex-1 py-2.5 bg-gray-100 text-gray-600 text-sm font-bold rounded-xl hover:bg-gray-200 transition">
+                        Batal
+                    </button>
+
+                    <button type="button"
+                        id="btnKonfirmasiPending"
+                        class="flex-1 py-2.5 bg-yellow-500 text-white text-sm font-bold rounded-xl hover:bg-yellow-600 transition">
+                        Ya, Pending
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <script>
 let formSetujuPending = null;
+let formTolakPending = null;
+let formPendingPending = null;
 
-function konfirmasiSetuju() {
-    document.getElementById('modalSetuju').classList.remove('hidden');
+function konfirmasiSetuju(form) {
+    formSetujuPending = form;
+    document.getElementById('modalSetuju')
+        .classList.remove('hidden');
     return false;
 }
 
@@ -530,20 +685,60 @@ function tutupModalSetuju() {
     formSetujuPending = null;
 }
 
-document.getElementById('btnKonfirmasiSetuju').addEventListener('click', function () {
-    tutupModalSetuju();
-    const forms = document.querySelectorAll('form[action*="setujui"]');
-    forms.forEach(form => {
+function konfirmasiTolak(form) {
+    formTolakPending = form;
+    document.getElementById('modalTolak')
+        .classList.remove('hidden');
+    return false;
+}
+function konfirmasiPending(form) {
+    formPendingPending = form;
+    document.getElementById('modalPending')
+        .classList.remove('hidden');
+    return false;
+}
+
+function tutupModalPending() {
+    document.getElementById('modalPending')
+        .classList.add('hidden');
+    formPendingPending = null;
+}
+
+function tutupModalTolak() {
+    document.getElementById('modalTolak')
+        .classList.add('hidden');
+    formTolakPending = null;
+}
+
+document.getElementById('btnKonfirmasiSetuju')
+.addEventListener('click', function () {
+    if (formSetujuPending) {
         const jabatan = '{{ $jabatanApproval }}';
         if (jabatan === 'direktur') {
-            transferCatatanDanUnit(form);
+            transferCatatanDanUnit(formSetujuPending);
         } else {
-            transferCatatan(form, 'catatan');
+            transferCatatan(formSetujuPending, 'catatan');
         }
-        form.submit();
-    });
+        formSetujuPending.submit();
+    }
+});
+
+document.getElementById('btnKonfirmasiTolak')
+.addEventListener('click', function () {
+    if (formTolakPending) {
+        transferCatatan(formTolakPending, 'catatan_tolak');
+        formTolakPending.submit();
+    }
 });
 let activeKategori = '';
+
+document.getElementById('btnKonfirmasiPending')
+.addEventListener('click', function () {
+    if (formPendingPending) {
+        transferCatatan(formPendingPending, 'catatan_pending');
+        formPendingPending.submit();
+    }
+});
 
 function filterKategoriUnit(kategori) {
     activeKategori = kategori;

@@ -54,7 +54,7 @@
 
                 {{-- NO AGENDA + PRIORITAS --}}
                 <div class="grid grid-cols-1 {{ in_array(auth()->user()->role, ['sekretaris','super_admin','admin']) ? 'sm:grid-cols-2' : '' }} gap-5">
-
+                @if(in_array(auth()->user()->role, ['sekretaris','super_admin','admin']))
                     <div>
                         <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">
                             No. Agenda
@@ -69,6 +69,7 @@
                                class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-sm
                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
+                @endif
 
                     @if(in_array(auth()->user()->role, ['sekretaris','super_admin','admin']))
                     <div>
@@ -326,31 +327,194 @@
 
                 </div>
 
-                {{-- BUTTON --}}
-                <div class="flex justify-end gap-3 pt-2">
+{{-- BUTTON --}}
+<div class="flex justify-end gap-3 pt-2">
 
-                    <a href="{{ route('eoffice.surat-masuk.index') }}"
-                       class="px-6 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition">
-                        Batal
-                    </a>
+    <a href="{{ route('eoffice.surat-masuk.index') }}"
+       onclick="event.preventDefault(); bukaModalBatal()"
+       class="px-6 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition">
 
-                    <button type="submit"
-                            class="px-8 py-2.5 bg-[#2B3A8C] text-white text-sm font-bold rounded-xl
-                                   hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-200 transition">
+        Batal
 
-                        @if(
-                            in_array(auth()->user()->role, ['unit','karyawan'])
-                            || auth()->user()->id_jabatan == 3
-                        )
-                            Kirim ke Sekretaris
-                        @else
-                            Simpan & Teruskan
-                        @endif
+    </a>
 
-                    </button>
+    <button type="button"
+            onclick="bukaModalSimpan()"
+            class="px-8 py-2.5 bg-[#2B3A8C] text-white text-sm font-bold rounded-xl
+                   hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-200 transition">
 
-                </div>
+        @if(
+            in_array(auth()->user()->role, ['unit','karyawan'])
+            || auth()->user()->id_jabatan == 3
+        )
 
+            Kirim ke Sekretaris
+
+        @else
+
+            Simpan & Teruskan
+
+        @endif
+
+    </button>
+
+</div>
+
+{{-- MODAL SIMPAN --}}
+<div id="modalSimpan"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center">
+
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+         onclick="tutupModalSimpan()"></div>
+
+    <div class="relative bg-white rounded-2xl shadow-2xl p-7 max-w-sm w-full mx-4 z-10">
+
+        <div class="flex flex-col items-center text-center gap-4">
+
+            <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="w-7 h-7 text-[#2B3A8C]"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2.5"
+                          d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+
+                </svg>
+
+            </div>
+
+            <div>
+
+                <h3 class="font-poppins font-bold text-gray-800 text-lg">
+
+                    Konfirmasi Surat
+
+                </h3>
+
+                <p class="text-gray-500 text-sm mt-1">
+
+                    Apakah Anda yakin ingin menyimpan dan meneruskan surat ini?
+
+                </p>
+
+            </div>
+
+            <div class="flex gap-3 w-full mt-2">
+
+                <button type="button"
+                        onclick="tutupModalSimpan()"
+                        class="flex-1 py-2.5 bg-gray-100 text-gray-600 text-sm font-bold rounded-xl hover:bg-gray-200 transition">
+
+                    Batal
+
+                </button>
+
+                <button type="submit"
+                        class="flex-1 py-2.5 bg-[#2B3A8C] text-white text-sm font-bold rounded-xl hover:bg-blue-900 transition">
+
+                    Ya, Lanjutkan
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{{-- MODAL BATAL --}}
+<div id="modalBatal"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center">
+
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+         onclick="tutupModalBatal()"></div>
+
+    <div class="relative bg-white rounded-2xl shadow-2xl p-7 max-w-sm w-full mx-4 z-10">
+
+        <div class="flex flex-col items-center text-center gap-4">
+
+            <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="w-7 h-7 text-red-600"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2.5"
+                          d="M6 18L18 6M6 6l12 12"/>
+
+                </svg>
+
+            </div>
+
+            <div>
+
+                <h3 class="font-poppins font-bold text-gray-800 text-lg">
+
+                    Batalkan Proses
+
+                </h3>
+
+                <p class="text-gray-500 text-sm mt-1">
+
+                    Data yang belum disimpan akan hilang.
+
+                </p>
+
+            </div>
+
+            <div class="flex gap-3 w-full mt-2">
+
+                <button type="button"
+                        onclick="tutupModalBatal()"
+                        class="flex-1 py-2.5 bg-gray-100 text-gray-600 text-sm font-bold rounded-xl hover:bg-gray-200 transition">
+
+                    Kembali
+
+                </button>
+
+                <a href="{{ route('eoffice.surat-masuk.index') }}"
+                   class="flex-1 py-2.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition text-center">
+
+                    Ya, Batal
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+function bukaModalSimpan() {
+    document.getElementById('modalSimpan').classList.remove('hidden');
+}
+
+function tutupModalSimpan() {
+    document.getElementById('modalSimpan').classList.add('hidden');
+}
+
+function bukaModalBatal() {
+    document.getElementById('modalBatal').classList.remove('hidden');
+}
+
+function tutupModalBatal() {
+    document.getElementById('modalBatal').classList.add('hidden');
+}
+</script>
             </div>
         </form>
     </div>

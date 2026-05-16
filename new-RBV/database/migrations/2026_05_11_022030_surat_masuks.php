@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('surat_masuks', function (Blueprint $table) {
             $table->id();
 
-            $table->string('nomor_agenda');
+            $table->string('nomor_agenda')->nullable();
             $table->string('nomor_surat')->nullable();
             $table->date('tanggal_surat')->nullable();
             $table->dateTime('tanggal_masuk')->nullable();

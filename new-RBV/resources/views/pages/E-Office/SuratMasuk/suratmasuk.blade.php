@@ -184,7 +184,7 @@
                             <th class="text-left px-4 py-4 font-bold">Asal Surat</th>
                             <th class="text-left px-4 py-4 font-bold">Kategori Unit</th>
                             <th class="text-left px-4 py-4 font-bold">Unit Pengirim</th>
-                            <th class="text-left px-4 py-4 font-bold">Perihal</th>
+                            {{-- <th class="text-left px-4 py-4 font-bold">Perihal</th> --}}
                             <th class="text-left px-4 py-4 font-bold">Tgl Masuk</th>
                             
                             @if(auth()->user()->hasRole(['super_admin', 'sekretaris']))
@@ -237,10 +237,10 @@
                                 </div>
                             </td>
 
-                            <td class="px-4 py-5 max-w-[220px]">
+                            {{-- <td class="px-4 py-5 max-w-[220px]">
                                 <p class="font-semibold text-gray-700 truncate">{{ $surat->perihal }}</p>
                                 <p class="text-[10px] text-gray-400 mt-0.5">{{ $surat->nomor_surat ?? '-' }}</p>
-                            </td>
+                            </td> --}}
 
                             <td class="px-4 py-5 text-xs text-gray-400 whitespace-nowrap">
                                 {{ \Carbon\Carbon::parse($surat->tanggal_masuk)->translatedFormat('d M Y') }}

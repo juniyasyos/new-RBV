@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use App\Models\SuratKeluar;
 
@@ -14,17 +15,18 @@ class SuratKeluarController extends Controller
     public function index(Request $request)
     {
         $query = SuratKeluar::query();
+
         if ($request->search) {
+
             $query->where(function ($q) use ($request) {
+
                 $q->where('nomor_surat', 'like', '%' . $request->search . '%')
                     ->orWhere('tujuan', 'like', '%' . $request->search . '%')
-                    ->orWhere('perihal', 'like', '%' . $request->search . '%');
+                    ->orWhere('perihal', 'like', '%' . $request->search . '%')
+                    ->orWhere('keterangan', 'like', '%' . $request->search . '%');
+
             });
-        }
 
-
-        if ($request->prioritas) {
-            $query->where('prioritas', $request->prioritas);
         }
 
         $suratKeluar = $query
@@ -40,11 +42,10 @@ class SuratKeluarController extends Controller
     public function show($id)
     {
         $surat = SuratKeluar::findOrFail($id);
-        $suratKeluar = collect([$surat]);
 
         return view(
-            'pages.E-Office.SuratKeluar.suratkeluar',
-            compact('suratKeluar')
+            'pages.E-Office.SuratKeluar.suratkeluar_show',
+            compact('surat')
         );
     }
 
@@ -57,35 +58,37 @@ class SuratKeluarController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
-            'nomor_surat' => 'required|string|unique:surat_keluars,nomor_surat',
-            'tanggal_keluar' => 'required|date',
-            'tujuan' => 'required|string',
-            'perihal' => 'required|string',
-            'keterangan' => 'nullable|string',
-            'prioritas' => 'nullable|in:biasa,sedang,segera',
-            'file_scan' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+
+            'nomor_surat'   => 'required|string|unique:surat_keluars,nomor_surat',
+            'tanggal_keluar'=> 'required|date',
+            'tujuan'        => 'required|string',
+            'perihal'       => 'required|string',
+            'keterangan'    => 'nullable|string',
+            'file_scan'     => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
 
         ]);
 
         $file = null;
+
         if ($request->hasFile('file_scan')) {
+
             $file = $request->file('file_scan')
                 ->store('surat-keluar', 'public');
+
         }
 
         SuratKeluar::create([
-            'nomor_surat' => $request->nomor_surat,
+
+            'nomor_surat'    => $request->nomor_surat,
             'tanggal_keluar' => $request->tanggal_keluar,
-            'tujuan' => $request->tujuan,
-            'perihal' => $request->perihal,
-            'keterangan' => $request->keterangan,
-            'prioritas' => $request->prioritas ?? 'biasa',
-            'jenis' => 'external',
-            'status' => 'disetujui',
-            'file_scan' => $file,
-            'dibuat_oleh' => Auth::user()->id_user,
+            'tujuan'         => $request->tujuan,
+
+            // JANGAN KETUKER
+            'perihal'        => $request->perihal,
+            'keterangan'     => $request->keterangan,
+
+            'file_scan'      => $file,
 
         ]);
 
@@ -100,6 +103,7 @@ class SuratKeluarController extends Controller
     public function edit($id)
     {
         $surat = SuratKeluar::findOrFail($id);
+
         return view(
             'pages.E-Office.SuratKeluar.suratkeluar_edit',
             compact('surat')
@@ -109,22 +113,27 @@ class SuratKeluarController extends Controller
     public function update(Request $request, $id)
     {
         $surat = SuratKeluar::findOrFail($id);
+
         $request->validate([
-            'nomor_surat' => 'required|string|unique:surat_keluars,nomor_surat,' . $surat->id,
-            'tanggal_keluar' => 'required|date',
-            'tujuan' => 'required|string',
-            'perihal' => 'required|string',
-            'keterangan' => 'nullable|string',
-            'prioritas' => 'nullable|in:biasa,sedang,segera',
-            'file_scan' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+
+            'nomor_surat'   => 'required|string|unique:surat_keluars,nomor_surat,' . $surat->id,
+            'tanggal_keluar'=> 'required|date',
+            'tujuan'        => 'required|string',
+            'perihal'       => 'required|string',
+            'keterangan'    => 'nullable|string',
+            'file_scan'     => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+
         ]);
 
         $file = $surat->file_scan;
 
         if ($request->hasFile('file_scan')) {
+
             if ($surat->file_scan) {
+
                 Storage::disk('public')
                     ->delete($surat->file_scan);
+
             }
 
             $file = $request->file('file_scan')
@@ -133,13 +142,17 @@ class SuratKeluarController extends Controller
         }
 
         $surat->update([
-            'nomor_surat' => $request->nomor_surat,
+
+            'nomor_surat'    => $request->nomor_surat,
             'tanggal_keluar' => $request->tanggal_keluar,
-            'tujuan' => $request->tujuan,
-            'perihal' => $request->perihal,
-            'keterangan' => $request->keterangan,
-            'prioritas' => $request->prioritas ?? 'biasa',
-            'file_scan' => $file,
+            'tujuan'         => $request->tujuan,
+
+            // JANGAN KETUKER
+            'perihal'        => $request->perihal,
+            'keterangan'     => $request->keterangan,
+
+            'file_scan'      => $file,
+
         ]);
 
         return redirect()
@@ -153,10 +166,12 @@ class SuratKeluarController extends Controller
     public function destroy($id)
     {
         $surat = SuratKeluar::findOrFail($id);
+
         if ($surat->file_scan) {
 
             Storage::disk('public')
                 ->delete($surat->file_scan);
+
         }
 
         $surat->delete();
@@ -169,15 +184,50 @@ class SuratKeluarController extends Controller
             );
     }
 
-    public function exportAll()
-    {
-        return redirect()
-            ->back()
-            ->with(
-                'info',
-                'Fitur export segera hadir.'
-            );
-    }
+public function exportAll()
+{
+    $fileName = 'surat_keluar_' . date('Ymd_His') . '.csv';
+
+    $suratKeluar = SuratKeluar::latest()->get();
+
+    $headers = [
+        'Content-type'        => 'text/csv',
+        'Content-Disposition' => "attachment; filename=$fileName",
+        'Pragma'              => 'no-cache',
+        'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
+        'Expires'             => '0',
+    ];
+
+    $columns = [
+        'Tanggal',
+        'No. Surat',
+        'Ditujukan Kepada',
+        'Perihal',
+        'Keterangan',
+    ];
+
+    $callback = function () use ($suratKeluar, $columns) {
+
+        $file = fopen('php://output', 'w');
+
+        fputcsv($file, $columns);
+
+        foreach ($suratKeluar as $surat) {
+
+            fputcsv($file, [
+                \Carbon\Carbon::parse($surat->tanggal_keluar)->format('d/m/Y'),
+                $surat->nomor_surat,
+                $surat->tujuan,
+                $surat->perihal,
+                $surat->keterangan,
+            ]);
+        }
+
+        fclose($file);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
 
     public function pdf($id)
     {
@@ -188,4 +238,6 @@ class SuratKeluarController extends Controller
                 'Fitur PDF segera hadir.'
             );
     }
+
+    
 }
