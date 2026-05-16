@@ -148,7 +148,7 @@
             @endif
 
             @if($bisaApprove)
-            <div class="bg-white rounded-2xl shadow-sm border border-yellow-200 p-5 sm:p-6">
+            <div id="approval" class="bg-white rounded-2xl shadow-sm border border-yellow-200 p-5 sm:p-6">
 
                 <div class="flex items-center gap-2 mb-5">
                     <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
@@ -423,13 +423,69 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
                 <h2 class="font-poppins font-bold text-gray-700 text-sm mb-4">Alur Persetujuan</h2>
                 @php
-                    $steps = [
-                        ['label' => 'Dikirim Unit',       'done' => true],
-                        ['label' => 'Acc Sekretaris',     'done' => !in_array($surat->status, ['menunggu_sekretaris'])],
-                        ['label' => 'Menunggu Direktur',  'done' => in_array($surat->status, ['menunggu_kabag','pending','disetujui','ditolak'])],
-                        ['label' => 'Disetujui Direktur', 'done' => in_array($surat->status, ['menunggu_kabag','pending','disetujui'])],
-                        ['label' => 'Menunggu Kabag',     'done' => in_array($surat->status, ['disetujui','ditolak'])],
-                        ['label' => 'Selesai',            'done' => $surat->status === 'disetujui'],
+
+                    $adaDirektur = $surat->persetujuans
+
+                        ->where('role_approver', 'direktur')
+
+                        ->count();
+
+                    $adaKabag = $surat->persetujuans
+
+                        ->where('role_approver', 'kabag')
+
+                        ->count();
+
+                @endphp
+                @php
+                    $steps = [];
+
+                    $steps[] = [
+                        'label' => 'Dikirim Unit',
+                        'done' => true
+                    ];
+
+                    $steps[] = [
+                        'label' => 'Acc Sekretaris',
+                        'done' => !in_array($surat->status, ['menunggu_sekretaris'])
+                    ];
+
+                    if ($adaDirektur) {
+
+                        $steps[] = [
+                            'label' => 'Menunggu Direktur',
+                            'done' => in_array($surat->status, [
+                                'menunggu_kabag',
+                                'pending',
+                                'disetujui',
+                                'ditolak'
+                            ])
+                        ];
+
+                        $steps[] = [
+                            'label' => 'Disetujui Direktur',
+                            'done' => in_array($surat->status, [
+                                'menunggu_kabag',
+                                'pending',
+                                'disetujui'
+                            ])
+                        ];
+                    }
+
+                    if ($adaKabag) {
+
+                        $steps[] = [
+                            'label' => 'Menunggu Kabag',
+                            'done' => in_array($surat->status, [
+                                'disetujui',
+                                'ditolak'
+                            ])
+                        ];
+                    }
+
+                    $steps[] = [
+                        'label' => 'Selesai',
+                        'done' => $surat->status === 'disetujui'
                     ];
                 @endphp
                 <div class="space-y-0">
