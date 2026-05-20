@@ -142,7 +142,7 @@ Route::prefix('eoffice')->name('eoffice.')->middleware(['auth'])->group(function
             Route::post('/', [\App\Http\Controllers\SuratMasukController::class, 'store'])->name('store');
             Route::get('/export/excel', [\App\Http\Controllers\SuratMasukController::class, 'exportExcel'])->name('export');
             Route::get('/{id}', [\App\Http\Controllers\SuratMasukController::class, 'show'])->name('show');
-            Route::get('/{id}/pdf', [\App\Http\Controllers\SuratMasukController::class, 'exportPdf'])->name('export-pdf');
+            // Route::get('/{id}/pdf', [\App\Http\Controllers\SuratMasukController::class, 'exportPdf'])->name('export-pdf');
             // Approvve
             Route::post('/{id}/setujui', [\App\Http\Controllers\SuratMasukController::class, 'setujui'])->name('setujui');
             Route::post('/{id}/tolak', [\App\Http\Controllers\SuratMasukController::class, 'tolak'])->name('tolak');

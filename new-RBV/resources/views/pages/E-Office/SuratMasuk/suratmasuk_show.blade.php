@@ -16,14 +16,37 @@
                     <p class="font-mono text-sm text-gray-400">{{ $surat->nomor_agenda }}</p>
                 </div>
             </div>
-            <a href="{{ route('eoffice.surat-masuk.export-pdf', $surat->id) }}"
-                class="flex items-center gap-2 px-6 py-3 bg-white text-red-600 font-bold text-sm rounded-2xl
-                       shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 self-start">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                </svg>
-                PDF
-            </a>
+<a href="{{ asset('storage/'.$surat->file_scan) }}" 
+
+   target="_blank"
+
+   class="flex items-center gap-2 px-6 py-3 bg-white text-red-600 font-bold text-sm rounded-2xl
+
+          shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 self-start">
+
+    <svg xmlns="http://www.w3.org/2000/svg"
+
+        class="w-5 h-5"
+
+        fill="none"
+
+        viewBox="0 0 24 24"
+
+        stroke="currentColor">
+
+        <path stroke-linecap="round"
+
+            stroke-linejoin="round"
+
+            stroke-width="2"
+
+            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+
+    </svg>
+
+    PDF
+
+</a>
         </div>
     </div>
 
@@ -132,7 +155,7 @@
             </div>
             @endif
 
-            @if($surat->file_scan)
+            {{-- @if($surat->file_scan)
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
                 <h2 class="font-poppins font-bold text-gray-700 text-sm mb-3">File Scan Surat</h2>
                 <a href="{{ asset('storage/'.$surat->file_scan) }}" target="_blank"
@@ -145,7 +168,7 @@
                     <span class="text-sm text-[#2B3A8C] font-semibold">Lihat / Download File Scan</span>
                 </a>
             </div>
-            @endif
+            @endif --}}
 
             @if($bisaApprove)
             <div id="approval" class="bg-white rounded-2xl shadow-sm border border-yellow-200 p-5 sm:p-6">

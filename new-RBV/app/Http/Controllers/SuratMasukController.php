@@ -212,7 +212,7 @@ class SuratMasukController extends Controller
             'asal_surat' => 'required',
             'prioritas' => 'nullable|in:biasa,sedang,segera',
             'jenis' => 'required|in:internal,external',
-            'perihal' => 'nulable|string',
+            'perihal' => 'nullable|string',
             'file_scan' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ]);
 

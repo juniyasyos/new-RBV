@@ -236,7 +236,18 @@ class UnitKerjaSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-
+            [
+                'nama_unit' => 'Unit Sekretariat',
+                'kabid' => 'Sekretariat',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_unit' => 'Unit Direksi',
+                'kabid' => 'Direksi',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
