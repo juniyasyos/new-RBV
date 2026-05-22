@@ -262,7 +262,7 @@
                         class="unit-item flex items-center gap-2.5 p-2 rounded-lg hover:bg-blue-100 cursor-pointer transition">
                         <input
                             type="checkbox"
-                            name="tag_units_hidden[]"
+                            name="tag_units[]"
                             value="{{ $u->id_user }}"
                             onchange="updateSelectedTags()"
                             class="unit-checkbox w-4 h-4 rounded border-gray-300 text-[#2B3A8C] focus:ring-[#2B3A8C]">
@@ -482,24 +482,26 @@
                             ])
                         ];
 
+                        $direkturApproved = $surat->persetujuans
+                            ->where('role_approver', 'direktur')
+                            ->where('status', 'disetujui')
+                            ->count();
                         $steps[] = [
                             'label' => 'Disetujui Direktur',
-                            'done' => in_array($surat->status, [
-                                'menunggu_kabag',
-                                'pending',
-                                'disetujui'
-                            ])
+                            'done' => $direkturApproved > 0
                         ];
                     }
 
                     if ($adaKabag) {
-
                         $steps[] = [
                             'label' => 'Menunggu Kabag',
-                            'done' => in_array($surat->status, [
-                                'disetujui',
-                                'ditolak'
-                            ])
+                            'done' => (
+                                $surat->status != 'ditolak' &&
+                                in_array($surat->status, [
+                                    'disetujui',
+                                    'pending'
+                                ])
+                            )
                         ];
                     }
 

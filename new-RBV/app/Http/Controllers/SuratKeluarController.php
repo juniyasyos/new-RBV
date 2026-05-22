@@ -32,7 +32,7 @@ class SuratKeluarController extends Controller
         }
 
         $suratKeluar = $query
-            ->latest()
+            ->orderBy('nomor_surat', 'asc')
             ->paginate(10);
 
         return view(

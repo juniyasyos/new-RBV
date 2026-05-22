@@ -132,7 +132,7 @@
                                 Asal Surat
                             </label>
 
-                            <div class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-gray-700 text-sm">
+                            <div class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-gray-500 text-sm">
                                 {{ auth()->user()->unit_kerja }}
                             </div>
                         </div>
@@ -203,7 +203,7 @@
                             <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">
                                 Jenis Surat
                             </label>
-                            <div class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-gray-700 text-sm">
+                            <div class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-gray-500 text-sm">
                                 Internal
                             </div>
                         </div>
