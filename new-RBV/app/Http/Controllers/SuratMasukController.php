@@ -54,6 +54,16 @@ class SuratMasukController extends Controller
             $query->where('status', $request->status);
         }
 
+        // FILTER BULAN DARI tanggal_surat
+        if ($request->bulan) {
+            $query->whereMonth('tanggal_surat', $request->bulan);
+        }
+
+        // FILTER TAHUN DARI tanggal_surat
+        if ($request->tahun) {
+            $query->whereYear('tanggal_surat', $request->tahun);
+        }
+
         if ($request->unit) {
             $query->whereHas('pembuat', function ($q) use ($request) {
                 $q->whereHas('unitKerjaRelation', function ($q2) use ($request) {
@@ -74,9 +84,20 @@ class SuratMasukController extends Controller
 
         $suratMenunggu = SuratMasuk::where('status', 'menunggu_sekretaris')->count();
 
+        $tahunList = SuratMasuk::selectRaw('YEAR(tanggal_surat) as tahun')
+            ->whereNotNull('tanggal_surat')
+            ->distinct()
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
         return view(
             'pages.E-Office.SuratMasuk.suratmasuk',
-            compact('suratMasuk', 'kategoriList', 'suratMenunggu')
+            compact(
+                'suratMasuk',
+                'kategoriList',
+                'suratMenunggu',
+                'tahunList'
+            )
         );
     }
 
@@ -901,9 +922,15 @@ class SuratMasukController extends Controller
             ->with('success', 'Surat berhasil ditolak.');
     }
 
-    public function exportExcel()
+    public function exportExcel(Request $request)
     {
-        return Excel::download(new SuratMasukExport, 'surat-masuk.xlsx');
+        return Excel::download(
+            new SuratMasukExport(
+                $request->bulan,
+                $request->tahun
+            ),
+            'surat-masuk.xlsx'
+        );
     }
 
     public function exportPdf($id)

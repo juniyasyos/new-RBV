@@ -20,7 +20,7 @@
 
             <div class="flex items-center gap-3">
                 @if(in_array(auth()->user()->role, ['super_admin','admin','sekretaris']))
-                <a href="{{ route('eoffice.surat-masuk.export') }}"
+                <a href="{{ route('eoffice.surat-masuk.export', request()->all()) }}"
                     class="flex items-center gap-2 px-5 py-3 bg-white text-green-600 font-bold text-sm rounded-2xl
                            shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

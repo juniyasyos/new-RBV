@@ -13,6 +13,7 @@ use App\Http\Controllers\SuratKeluarController;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BackupController;
 
 Route::get('/', [BukuController::class, 'beranda']);
 Route::get('/koleksi', [BukuController::class, 'index'])->name('books.index');
@@ -169,3 +170,16 @@ Route::prefix('eoffice')->name('eoffice.')->middleware(['auth'])->group(function
             Route::get('/{id}/baca', [\App\Http\Controllers\NotifikasiController::class, 'baca'])->name('baca');
         });
     });
+
+Route::middleware(['auth', 'role:admin,super_admin'])->group(function () {
+
+    Route::get('/backup', [BackupController::class, 'index'])
+        ->name('backup.index');
+
+    Route::post('/backup/export', [BackupController::class, 'export'])
+        ->name('backup.export');
+
+    Route::post('/backup/import', [BackupController::class, 'import'])
+        ->name('backup.import');
+
+});
