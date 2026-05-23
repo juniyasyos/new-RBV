@@ -65,10 +65,9 @@
 
             <div class="mb-8">
                 <form method="GET" action="{{ route('eoffice.surat-masuk.index') }}">
-                    <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-3">
 
                         @if(in_array(auth()->user()->role, ['unit','karyawan']))
-                        {{-- Unit: search + cari dalam 1 baris --}}
                         <div class="flex gap-3 items-center">
                             <input type="text" name="search" value="{{ request('search') }}"
                                 placeholder="Cari nomor agenda / perihal / nomor surat..."
@@ -88,35 +87,27 @@
                             @endif
                         </div>
                         @else
+
                         <input type="text" name="search" value="{{ request('search') }}"
                             placeholder="Cari nomor agenda / perihal / nomor surat..."
                             class="w-full bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3.5 px-6 text-sm
                                 focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] transition">
-                        @endif
 
-                        @if(!in_array(auth()->user()->role,['unit','karyawan']))
-                        <div class="flex flex-wrap items-center gap-3">
-
-                            
-                            {{-- @if(auth()->user()->hasRole(['super_admin', 'sekretaris'])) --}}
+                        <div class="flex gap-2 w-full">
                             <select name="kategori" id="filterKategori"
                                 onchange="filterUnitByKategori(this.value)"
-                                class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
-                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] min-w-[170px]">
-                                <option value="">Semua Kategori</option>
+                                class="flex-1 min-w-0 bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-3 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                                <option value="">Kategori</option>
                                 @foreach($kategoriList as $kat => $units)
-                                <option value="{{ $kat }}" {{ request('kategori') == $kat ? 'selected' : '' }}>
-                                    {{ $kat }}
-                                </option>
+                                <option value="{{ $kat }}" {{ request('kategori') == $kat ? 'selected' : '' }}>{{ $kat }}</option>
                                 @endforeach
                             </select>
-                            {{-- @endif --}}
 
-                            {{-- @if(auth()->user()->hasRole(['super_admin', 'sekretaris'])) --}}
                             <select name="unit" id="filterUnit"
-                                class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
-                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C] min-w-[160px]
-                                       {{ request('kategori') ? '' : 'opacity-50 cursor-not-allowed' }}"
+                                class="flex-1 min-w-0 bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-3 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]
+                                    {{ request('kategori') ? '' : 'opacity-50 cursor-not-allowed' }}"
                                 {{ request('kategori') ? '' : 'disabled' }}>
                                 <option value="">Semua Unit</option>
                                 @foreach($kategoriList as $kat => $units)
@@ -130,47 +121,61 @@
                                     @endforeach
                                 @endforeach
                             </select>
-                            {{-- @endif --}}
 
-                            {{-- @if(auth()->user()->hasRole('super_admin', 'sekretasi')) --}}
                             <select name="prioritas"
-                                class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
-                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
-                                <option value="">Semua Prioritas</option>
+                                class="flex-1 min-w-0 bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-3 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                                <option value="">Prioritas</option>
                                 <option value="segera" {{ request('prioritas') == 'segera' ? 'selected' : '' }}>🔴 Segera</option>
                                 <option value="sedang" {{ request('prioritas') == 'sedang' ? 'selected' : '' }}>🟡 Sedang</option>
                                 <option value="biasa"  {{ request('prioritas') == 'biasa'  ? 'selected' : '' }}>🟢 Biasa</option>
                             </select>
-                            {{-- @endif --}}
 
-                            {{-- @if(auth()->user()->hasRole('super_admin','sekretaris')) --}}
                             <select name="status"
-                                class="bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-5 text-sm
-                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
-                                <option value="">Semua Status</option>
+                                class="flex-1 min-w-0 bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-3 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                                <option value="">Status</option>
                                 <option value="menunggu_sekretaris" {{ request('status') == 'menunggu_sekretaris' ? 'selected' : '' }}>Menunggu Acc</option>
-                                <option value="menunggu_direktur"   {{ request('status') == 'menunggu_direktur'   ? 'selected' : '' }}>Menunggu Direktur</option>
-                                <option value="menunggu_kabag"      {{ request('status') == 'menunggu_kabag'      ? 'selected' : '' }}>Menunggu Kabag</option>
+                                <option value="menunggu_direktur"   {{ request('status') == 'menunggu_direktur'   ? 'selected' : '' }}>Menunggu Dir</option>
+                                <option value="menunggu_kabag"      {{ request('status') == 'menunggu_kabag'      ? 'selected' : '' }}>Menunggu Kbg</option>
                                 <option value="pending"             {{ request('status') == 'pending'             ? 'selected' : '' }}>Pending</option>
                                 <option value="disetujui"           {{ request('status') == 'disetujui'           ? 'selected' : '' }}>Disetujui</option>
                                 <option value="ditolak"             {{ request('status') == 'ditolak'             ? 'selected' : '' }}>Ditolak</option>
                             </select>
-                            {{-- @endif --}}
 
-                            <div class="flex gap-2 ml-auto">
-                                <button type="submit"
-                                    class="px-8 py-3 bg-[#2B3A8C] text-white text-sm font-bold rounded-2xl
-                                           hover:bg-blue-800 transition shadow-lg shadow-blue-100">
-                                    Cari
-                                </button>
-                                @if(request()->hasAny(['search','kategori','prioritas','status']))
-                                <a href="{{ route('eoffice.surat-masuk.index') }}"
-                                    class="px-5 py-3 bg-gray-100 text-gray-600 text-sm font-bold rounded-2xl hover:bg-gray-200 transition">
-                                    Reset
-                                </a>
-                                @endif
-                            </div>
+                            <select name="bulan"
+                                class="flex-1 min-w-0 bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-3 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                                <option value="">Bulan</option>
+                                @foreach([1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'Mei',6=>'Jun',7=>'Jul',8=>'Agu',9=>'Sep',10=>'Okt',11=>'Nov',12=>'Des'] as $num => $nama)
+                                <option value="{{ $num }}" {{ request('bulan') == $num ? 'selected' : '' }}>{{ $nama }}</option>
+                                @endforeach
+                            </select>
+
+                            <select name="tahun"
+                                class="flex-1 min-w-0 bg-[#F8FAFF] border border-gray-100 rounded-2xl py-3 px-3 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                                <option value="">Tahun</option>
+                                @foreach($tahunList as $tahun)
+                                <option value="{{ $tahun }}" {{ request('tahun') == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
+                                @endforeach
+                            </select>
+
+                            <button type="submit"
+                                class="flex-shrink-0 px-6 py-3 bg-[#2B3A8C] text-white text-sm font-bold rounded-2xl
+                                    hover:bg-blue-800 transition shadow-lg shadow-blue-100">
+                                Cari
+                            </button>
+
+                            @if(request()->hasAny(['search','kategori','unit','prioritas','status','bulan','tahun']))
+                            <a href="{{ route('eoffice.surat-masuk.index') }}"
+                                class="flex-shrink-0 px-5 py-3 bg-gray-100 text-gray-600 text-sm font-bold rounded-2xl
+                                    hover:bg-gray-200 transition">
+                                Reset
+                            </a>
+                            @endif
                         </div>
+
                         @endif
                     </div>
                 </form>
