@@ -5,7 +5,7 @@
 <div class="relative min-h-screen flex items-center justify-center overflow-hidden">
 
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('images/image0.jpg') }}"
+        <img src="{{ asset('images/login.png') }}"
             alt="background"
             class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black/30"></div>

@@ -2,12 +2,12 @@
 
 @section('content')
 
-    <div class="relative w-full h-[55vh] sm:h-[70vh] lg:h-[calc(95vh-100px)] overflow-hidden">
+    <div class="relative w-full aspect-[1544/542] overflow-hidden">
 
         <div id="slider" class="relative z-0 flex transition-transform duration-700 ease-in-out h-full">
-            <img src="{{ asset('images/image0.jpg') }}"  class="w-full h-full object-cover flex-shrink-0">
-            <img src="{{ asset('images/beranda.jpg') }}" class="w-full h-full object-cover flex-shrink-0">
-            <img src="{{ asset('images/image2.jpg') }}"  class="w-full h-full object-cover flex-shrink-0">
+            <img src="{{ asset('images/berandaslide1.png') }}"  class="w-full h-full object-cover flex-shrink-0">
+            <img src="{{ asset('images/berandaslide2.png') }}" class="w-full h-full object-cover flex-shrink-0">
+            <img src="{{ asset('images/berandaslide3.png') }}"  class="w-full h-full object-cover flex-shrink-0">
         </div>
 
         <div class="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 group">

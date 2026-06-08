@@ -119,7 +119,7 @@
                     </div>
 
                     @if(
-                        in_array(auth()->user()->role, ['unit','karyawan'])
+                        in_array(auth()->user()->role, ['unit'])
                         || auth()->user()->id_jabatan == 3
                     )
 
@@ -191,7 +191,7 @@
                     @endif
 
                     @if(
-                        in_array(auth()->user()->role, ['unit','karyawan'])
+                        in_array(auth()->user()->role, ['unit'])
                         || auth()->user()->id_jabatan == 3
                     )
 
@@ -358,7 +358,7 @@
                    hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-200 transition">
 
         @if(
-            in_array(auth()->user()->role, ['unit','karyawan'])
+            in_array(auth()->user()->role, ['unit'])
             || auth()->user()->id_jabatan == 3
         )
 
