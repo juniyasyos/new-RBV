@@ -135,7 +135,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::redirect('/e-office', '/eoffice');
 
-Route::prefix('eoffice')->name('eoffice.')->middleware(['auth'])->group(function () {
+Route::prefix('eoffice')->name('eoffice.')->middleware(['auth', 'role:super_admin,sekretaris,unit'])->group(function () {
 
         Route::prefix('surat-masuk')->name('surat-masuk.')->group(function () {
             Route::get('/', [\App\Http\Controllers\SuratMasukController::class, 'index'])->name('index');

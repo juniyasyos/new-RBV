@@ -104,10 +104,27 @@
                     </div>
                     <div>
                         <p class="text-xs text-gray-400 mb-0.5">Pengirim</p>
-                        <p class="font-semibold text-gray-700">
-                            {{ $surat->pembuat->nama_lengkap ?? '-' }}
-                            <span class="text-gray-400 font-normal text-xs">({{ $surat->pembuat->unit_kerja ?? '' }})</span>
-                        </p>
+                    <p class="font-semibold text-gray-700">
+
+                        {{ $surat->pembuat->nama_lengkap ?? '-' }}
+
+                        <span class="text-gray-400 font-normal text-xs">
+
+                            (
+
+                            {{ $surat->pembuat->unit_kerja ?? '' }}
+
+                            @if(!empty($surat->pembuat->unitKerjaRelation->kabid))
+
+                                - {{ $surat->pembuat->unitKerjaRelation->kabid }}
+
+                            @endif
+
+                            )
+
+                        </span>
+
+                    </p>
                     </div>
                 </div>
 

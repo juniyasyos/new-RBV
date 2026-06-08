@@ -151,8 +151,13 @@
 
                             
                             <td class="px-4 py-4 text-xs text-gray-600 hidden md:table-cell">{{ $akun->jabatan ?? '-' }}</td>
-                            <td class="px-4 py-4 text-xs text-gray-600 hidden lg:table-cell">{{ $akun->unit_kerja ?? '-' }}</td>
-
+                            <td class="px-4 py-4 text-xs text-gray-600 hidden lg:table-cell">
+                                {{ $akun->unitKerjaRelation->nama_unit ?? '-' }}
+                                <br>
+                                <span class="text-[10px] text-gray-400">
+                                    {{ $akun->unitKerjaRelation->kabid ?? '' }}
+                                </span>
+                            </td>
                             <td class="px-4 py-4">
                                 @php
                                     $roleConfig = [

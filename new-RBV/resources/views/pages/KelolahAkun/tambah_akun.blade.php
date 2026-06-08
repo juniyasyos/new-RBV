@@ -148,11 +148,17 @@
 
                         <div id="selectedUnit"
                             class="hidden mb-2 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-[#2B3A8C]">
+                                Unit :
+                                <span id="selectedUnitNama"></span>
+                            </p>
 
-                            <div>
-                                <p class="text-sm font-semibold text-[#2B3A8C]" id="selectedUnitNama"></p>
-                                <p class="text-xs text-gray-400" id="selectedUnitKategori"></p>
-                            </div>
+                            <p class="text-xs text-gray-500">
+                                Kabid :
+                                <span id="selectedUnitKategori"></span>
+                            </p>
+                        </div>
 
                             <button type="button"
                                 onclick="clearSelectedUnit()"
@@ -219,6 +225,9 @@
                                     <div class="flex-1">
                                         <p class="text-xs font-semibold text-gray-700">
                                             {{ $u->nama_unit }}
+                                        </p>
+                                        <p class="text-[10px] text-gray-500">
+                                            {{ $u->kabid }}
                                         </p>
                                     </div>
                                 </label>
@@ -459,7 +468,7 @@ function checkPasswordMatch() {
         okDiv.classList.remove('hidden');
     }
 }
-document.getElementById('formEditAkun')
+document.getElementById('formTambahAkun')
 .addEventListener('submit', function (e) {
 
     const pw = document.getElementById('password').value;

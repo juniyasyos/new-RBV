@@ -132,9 +132,21 @@
                                 Asal Surat
                             </label>
 
-                            <div class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-gray-500 text-sm">
+                        <div class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5">
+
+                            <div class="text-gray-700 text-sm">
+
                                 {{ auth()->user()->unit_kerja }}
+
                             </div>
+
+                            <div class="text-[10px] text-gray-400">
+
+                                {{ auth()->user()->unitKerjaRelation->kabid ?? '' }}
+
+                            </div>
+
+                        </div>
                         </div>
 
                     @else

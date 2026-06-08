@@ -173,15 +173,27 @@
                             Pengirim
                         </p>
 
-                        <p class="font-semibold text-gray-700">
+                    <p class="font-semibold text-gray-700">
 
-                            {{ $surat->pembuat->nama_lengkap ?? '-' }}
+                        {{ $surat->pembuat->nama_lengkap ?? '-' }}
 
-                            <span class="text-gray-400 font-normal text-xs">
-                                ({{ $surat->pembuat->unit_kerja ?? '' }})
-                            </span>
+                        <span class="text-gray-400 font-normal text-xs">
 
-                        </p>
+                            (
+
+                            {{ $surat->pembuat->unit_kerja ?? '' }}
+
+                            @if(!empty($surat->pembuat->unitKerjaRelation->kabid))
+
+                                - {{ $surat->pembuat->unitKerjaRelation->kabid }}
+
+                            @endif
+
+                            )
+
+                        </span>
+
+                    </p>
 
                     </div>
 
