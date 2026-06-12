@@ -92,7 +92,7 @@
                     class="bg-gray-400 text-white font-bold py-3 rounded-xl w-full">
                     Tidak
                 </button>
-                <form :action="'/artikel/' + selectedId" method="POST" class="w-full">
+                <form :action="'/cms/artikel/' + selectedId" method="POST" class="w-full">
                     @csrf
                     @method('DELETE')
                     <button class="bg-red-600 text-white font-bold py-3 rounded-xl w-full">

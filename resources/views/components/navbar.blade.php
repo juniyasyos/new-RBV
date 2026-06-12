@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const list = document.getElementById('notifList');
         if (!list) return;
         try {
-            const res  = await fetch('{{ route("eoffice.notifikasi.index") }}', {
+            const res = await fetch('{{ route("notifikasi.index") }}', {
                 headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
             });
             const data = await res.json();
@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const list = document.getElementById('notifListMobile2');
         if (!list) return;
         try {
-            const res  = await fetch('{{ route("eoffice.notifikasi.index") }}', {
+            const res = await fetch('{{ route("notifikasi.index") }}', {
                 headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
             });
             const data = await res.json();
@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.tandaiBaca = async function(id, url) {
         try {
-            await fetch(`/eoffice/notifikasi/${id}/baca`, {
+            await fetch(`/notifikasi/${id}/baca`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN'    : document.querySelector('meta[name="csrf-token"]').content,
@@ -410,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.bacaSemua = async function() {
         try {
-            await fetch('/eoffice/notifikasi/baca-semua', {
+            await fetch('/notifikasi/baca-semua', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN'    : document.querySelector('meta[name="csrf-token"]').content,
@@ -425,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function fetchBadge() {
         try {
-            const res  = await fetch('{{ route("eoffice.notifikasi.index") }}', {
+            const res = await fetch('{{ route("notifikasi.index") }}', {
                 headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
             });
             const data = await res.json();
