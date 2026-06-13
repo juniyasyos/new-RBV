@@ -62,7 +62,7 @@
                     @endauth
 
                     <a href="/artikel" class="font-poppins font-normal hover:text-blue-700 transition">Artikel</a>
-                    <a href="/video" class="font-poppins font-normal hover:text-blue-700 transition">Video</a>
+                    <a href="/video" class="font-poppins font-normal hover:text-blue-700 transition">Videos</a>
                 </div>
             </div>
 
