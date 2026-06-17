@@ -6,7 +6,7 @@
 
         <div id="slider" class="relative z-0 flex transition-transform duration-700 ease-in-out h-full">
             <img src="{{ asset('images/frame 6.png') }}"  class="w-full h-full object-cover flex-shrink-0">
-            <img src="{{ asset('images/frame 5.png') }}" class="w-full h-full object-cover flex-shrink-0">
+            <img src="{{ asset('images/Beranda fix.jpeg') }}" class="w-full h-full object-cover flex-shrink-0">
             <img src="{{ asset('images/frame 7.png') }}"  class="w-full h-full object-cover flex-shrink-0">
         </div>
 
@@ -66,7 +66,7 @@
                     <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden flex flex-col border border-white p-3 sm:p-4 lg:p-5 pt-0.5 group">
 
                         <div class="relative aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-inner bg-gray-50 mt-2">
-                            <img src="{{ asset('storage/'.$buku->cover) }}"
+                            <img src="{{ Storage::disk('minio')->url($buku->cover) }}"
                                 class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                         </div>
 
@@ -99,7 +99,7 @@
 
                             <div class="flex flex-col items-center">
                                 <div class="w-36 sm:w-48 lg:w-64 aspect-[3/4] mb-5 sm:mb-8 shadow-2xl rounded-lg overflow-hidden">
-                                    <img src="{{ asset('storage/'.$buku->cover) }}" class="w-full h-full object-cover">
+                                    <img src="{{ Storage::disk('minio')->url($buku->cover) }}" class="w-full h-full object-cover">
                                 </div>
 
                                 <div class="w-full text-left">

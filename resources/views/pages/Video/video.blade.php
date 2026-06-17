@@ -55,7 +55,7 @@
                         <a href="{{ $video->file_url }}" target="_blank" class="block w-full h-full">
 
                             @if(!empty($video->thumbnail))
-                                <img src="{{ trim($video->thumbnail) }}"
+                                <img src="{{ filter_var($video->thumbnail, FILTER_VALIDATE_URL) ? $video->thumbnail : Storage::disk('minio')->url($video->thumbnail) }}"
                                     class="w-full h-full object-cover">
 
                             @elseif($youtubeId)

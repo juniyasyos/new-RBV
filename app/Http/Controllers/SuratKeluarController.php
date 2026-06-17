@@ -62,12 +62,12 @@ class SuratKeluarController extends Controller
     {
         $request->validate([
 
-            'nomor_surat'   => 'required|string|unique:surat_keluars,nomor_surat',
-            'tanggal_keluar'=> 'required|date',
-            'tujuan'        => 'required|string',
-            'perihal'       => 'required|string',
-            'keterangan'    => 'nullable|string',
-            'file_scan'     => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'nomor_surat'    => 'required|string|unique:surat_keluars,nomor_surat',
+            'tanggal_keluar' => 'required|date',
+            'tujuan'         => 'required|string',
+            'perihal'        => 'required|string',
+            'keterangan'     => 'nullable|string',
+            'file_scan'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
 
         ]);
 
@@ -76,7 +76,7 @@ class SuratKeluarController extends Controller
         if ($request->hasFile('file_scan')) {
 
             $file = $request->file('file_scan')
-                ->store('surat-keluar', 'public');
+                ->store('surat-keluar', 'minio');
 
         }
 
@@ -85,10 +85,8 @@ class SuratKeluarController extends Controller
             'nomor_surat'    => $request->nomor_surat,
             'tanggal_keluar' => $request->tanggal_keluar,
             'tujuan'         => $request->tujuan,
-
             'perihal'        => $request->perihal,
             'keterangan'     => $request->keterangan,
-
             'file_scan'      => $file,
 
         ]);
@@ -117,12 +115,12 @@ class SuratKeluarController extends Controller
 
         $request->validate([
 
-            'nomor_surat'   => 'required|string|unique:surat_keluars,nomor_surat,' . $surat->id,
-            'tanggal_keluar'=> 'required|date',
-            'tujuan'        => 'required|string',
-            'perihal'       => 'required|string',
-            'keterangan'    => 'nullable|string',
-            'file_scan'     => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'nomor_surat'    => 'required|string|unique:surat_keluars,nomor_surat,' . $surat->id,
+            'tanggal_keluar' => 'required|date',
+            'tujuan'         => 'required|string',
+            'perihal'        => 'required|string',
+            'keterangan'     => 'nullable|string',
+            'file_scan'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
 
         ]);
 
@@ -132,13 +130,13 @@ class SuratKeluarController extends Controller
 
             if ($surat->file_scan) {
 
-                Storage::disk('public')
+                Storage::disk('minio')
                     ->delete($surat->file_scan);
 
             }
 
             $file = $request->file('file_scan')
-                ->store('surat-keluar', 'public');
+                ->store('surat-keluar', 'minio');
 
         }
 
@@ -170,7 +168,7 @@ class SuratKeluarController extends Controller
 
         if ($surat->file_scan) {
 
-            Storage::disk('public')
+            Storage::disk('minio')
                 ->delete($surat->file_scan);
 
         }
@@ -202,6 +200,4 @@ class SuratKeluarController extends Controller
                 'Fitur PDF segera hadir.'
             );
     }
-
-    
 }

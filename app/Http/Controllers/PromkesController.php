@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
-
 class PromkesController extends Controller
 {
     public function index(Request $request)
@@ -47,7 +46,7 @@ class PromkesController extends Controller
         $filePath = null;
 
         if ($request->hasFile('file')) {
-            $filePath = $request->file('file')->store('promkes', 'public');
+            $filePath = $request->file('file')->store('promkes', 'minio');
         }
 
         Promkes::create([
@@ -86,10 +85,10 @@ class PromkesController extends Controller
 
         if ($request->hasFile('file')) {
             if ($promkes->file) {
-                Storage::disk('public')->delete($promkes->file);
+                Storage::disk('minio')->delete($promkes->file);
             }
 
-            $data['file'] = $request->file('file')->store('promkes', 'public');
+            $data['file'] = $request->file('file')->store('promkes', 'minio');
         }
 
         $promkes->update($data);
@@ -102,7 +101,7 @@ class PromkesController extends Controller
         $promkes = Promkes::findOrFail($id);
 
         if ($promkes->file) {
-            Storage::disk('public')->delete($promkes->file);
+            Storage::disk('minio')->delete($promkes->file);
         }
 
         $promkes->delete();

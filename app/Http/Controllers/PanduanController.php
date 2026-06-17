@@ -41,7 +41,7 @@ class PanduanController extends Controller
             'file' => 'required|file|mimes:pdf|max:20480',
         ]);
 
-        $file = $request->file('file')->store('panduan', 'public');
+        $file = $request->file('file')->store('panduan', 'minio');
 
         Panduan::create([
             'judul' => $request->judul,
@@ -73,8 +73,10 @@ class PanduanController extends Controller
         ];
 
         if ($request->file('file')) {
-            Storage::disk('public')->delete($panduan->file);
-            $data['file'] = $request->file('file')->store('panduan', 'public');
+            Storage::disk('minio')->delete($panduan->file);
+
+            $data['file'] = $request->file('file')
+                ->store('panduan', 'minio');
         }
 
         $panduan->update($data);
@@ -87,7 +89,8 @@ class PanduanController extends Controller
     {
         $panduan = Panduan::findOrFail($id);
 
-        Storage::disk('public')->delete($panduan->file);
+        Storage::disk('minio')->delete($panduan->file);
+
         $panduan->delete();
 
         return redirect()->route('panduan.index')

@@ -19,24 +19,18 @@ class VideoController extends Controller
         return view('pages.Video.createvideo');
     }
 
-    /**
-     * Ambil thumbnail dari URL video (YouTube, TikTok, Instagram)
-     */
     private function getThumbnail(string $url): string
     {
-        // ── YouTube ──────────────────────────────────────────────────────────
         if (preg_match('/(youtube\.com|youtu\.be)/i', $url)) {
             preg_match('/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/', $url, $yt);
             $id = $yt[1] ?? null;
 
             if ($id) {
-                // Coba maxresdefault dulu, fallback ke hqdefault
                 $maxres = "https://img.youtube.com/vi/{$id}/maxresdefault.jpg";
                 $hq     = "https://img.youtube.com/vi/{$id}/hqdefault.jpg";
 
                 try {
                     $check = Http::timeout(5)->head($maxres);
-                    // YouTube mengembalikan 200 tapi gambar 120x90 jika tidak ada maxres
                     $thumbnail = ($check->successful() && ($check->header('Content-Length') ?? 0) > 2000)
                         ? $maxres
                         : $hq;
@@ -48,10 +42,8 @@ class VideoController extends Controller
             }
         }
 
-        // ── TikTok ───────────────────────────────────────────────────────────
         if (preg_match('/tiktok\.com/i', $url)) {
             try {
-                // oEmbed resmi TikTok
                 $response = Http::timeout(10)
                     ->withHeaders(['User-Agent' => 'Mozilla/5.0'])
                     ->get('https://www.tiktok.com/oembed', ['url' => $url]);
@@ -61,10 +53,8 @@ class VideoController extends Controller
                     if ($thumb) return $thumb;
                 }
             } catch (\Exception $e) {
-                // lanjut ke fallback
             }
 
-            // Fallback: coba ambil via noembed.com
             try {
                 $response = Http::timeout(10)
                     ->get('https://noembed.com/embed', ['url' => $url]);
@@ -74,16 +64,13 @@ class VideoController extends Controller
                     if ($thumb) return $thumb;
                 }
             } catch (\Exception $e) {
-                // lanjut ke placeholder
             }
 
             return 'https://placehold.co/400x300?text=TikTok';
         }
 
-        // ── Instagram ────────────────────────────────────────────────────────
         if (preg_match('/instagram\.com/i', $url)) {
             try {
-                // oEmbed Instagram (butuh Facebook Access Token di env jika private)
                 $token = config('services.instagram.token'); // opsional
                 $params = ['url' => $url, 'omitscript' => true];
                 if ($token) $params['access_token'] = $token;
@@ -96,13 +83,11 @@ class VideoController extends Controller
                     if ($thumb) return $thumb;
                 }
             } catch (\Exception $e) {
-                // lanjut ke fallback
             }
 
             return 'https://placehold.co/400x300?text=Instagram';
         }
 
-        // ── Fallback umum ────────────────────────────────────────────────────
         return 'https://placehold.co/400x300?text=Video';
     }
 

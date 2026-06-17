@@ -232,7 +232,7 @@ class SuratMasukController extends Controller
         // UPLOAD FILE
         $file = null;
         if ($request->hasFile('file_scan')) {
-            $file = $request->file('file_scan')->store('surat-masuk', 'public');
+            $file = $request->file('file_scan')->store('surat-masuk', 'minio');
         }
 
         // STATUS AWAL

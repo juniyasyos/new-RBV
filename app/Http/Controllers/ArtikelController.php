@@ -28,8 +28,8 @@ class ArtikelController extends Controller
             'file_pdf'  => 'required|file|max:20480'
         ]);
 
-        $cover = $request->file('cover')->store('artikel','public');
-        $pdf   = $request->file('file_pdf')->store('artikel','public');
+        $cover = $request->file('cover')->store('artikel', 'minio');
+        $pdf   = $request->file('file_pdf')->store('artikel', 'minio');
 
         Artikel::create([
             'judul'     => $request->judul,
@@ -40,15 +40,15 @@ class ArtikelController extends Controller
         ]);
 
         return redirect()->route('artikel.index')
-            ->with('success','Artikel berhasil ditambahkan');
+            ->with('success', 'Artikel berhasil ditambahkan');
     }
 
     public function read($id)
     {
         $artikel = Artikel::findOrFail($id);
 
-        return response()->file(
-            storage_path('app/public/' . $artikel->file_pdf)
+        return redirect(
+            Storage::disk('minio')->url($artikel->file_pdf)
         );
     }
 
@@ -58,7 +58,7 @@ class ArtikelController extends Controller
         return view('pages.Artikel.editartikel', compact('artikel'));
     }
 
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
         $artikel = Artikel::findOrFail($id);
 
@@ -67,32 +67,36 @@ class ArtikelController extends Controller
             'deskripsi' => $request->deskripsi
         ];
 
-        if($request->file('cover')){
-            Storage::disk('public')->delete($artikel->cover);
-            $data['cover'] = $request->file('cover')->store('artikel','public');
+        if ($request->file('cover')) {
+            Storage::disk('minio')->delete($artikel->cover);
+
+            $data['cover'] = $request->file('cover')
+                ->store('artikel', 'minio');
         }
 
-        if($request->file('file_pdf')){
-            Storage::disk('public')->delete($artikel->file_pdf);
-            $data['file_pdf'] = $request->file('file_pdf')->store('artikel','public');
+        if ($request->file('file_pdf')) {
+            Storage::disk('minio')->delete($artikel->file_pdf);
+
+            $data['file_pdf'] = $request->file('file_pdf')
+                ->store('artikel', 'minio');
         }
 
         $artikel->update($data);
 
         return redirect()->route('artikel.index')
-            ->with('success','Artikel berhasil diupdate');
+            ->with('success', 'Artikel berhasil diupdate');
     }
 
     public function destroy($id)
     {
         $artikel = Artikel::findOrFail($id);
 
-        Storage::disk('public')->delete($artikel->cover);
-        Storage::disk('public')->delete($artikel->file_pdf);
+        Storage::disk('minio')->delete($artikel->cover);
+        Storage::disk('minio')->delete($artikel->file_pdf);
 
         $artikel->delete();
 
         return redirect()->route('artikel.index')
-            ->with('success','Artikel berhasil dihapus');
+            ->with('success', 'Artikel berhasil dihapus');
     }
 }

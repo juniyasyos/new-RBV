@@ -86,7 +86,9 @@ class BukuController extends Controller
     {
         $buku = Buku::findOrFail($id);
 
-        return response()->file(storage_path('app/public/'.$buku->file_pdf));
+        return redirect(
+            Storage::disk('minio')->url($buku->file_pdf)
+        );
     }
 
     public function create()
@@ -106,8 +108,8 @@ class BukuController extends Controller
             'cover' => 'required|file|max:20480',
         ]);
 
-        $pdf = $request->file('file_pdf')->store('books', 'public');
-        $cover = $request->file('cover')->store('covers', 'public');
+        $pdf = $request->file('file_pdf')->store('books', 'minio');
+        $cover = $request->file('cover')->store('covers', 'minio');
 
         Buku::create([
             'judul' => $request->judul,
@@ -142,13 +144,13 @@ class BukuController extends Controller
         ];
 
         if ($request->file('file_pdf')) {
-            Storage::disk('public')->delete($buku->file_pdf);
-            $data['file_pdf'] = $request->file('file_pdf')->store('books', 'public');
+            Storage::disk('minio')->delete($buku->file_pdf);
+            $data['file_pdf'] = $request->file('file_pdf')->store('books', 'minio');
         }
 
         if ($request->file('cover')) {
-            Storage::disk('public')->delete($buku->cover);
-            $data['cover'] = $request->file('cover')->store('covers', 'public');
+            Storage::disk('minio')->delete($buku->cover);
+            $data['cover'] = $request->file('cover')->store('covers', 'minio');
         }
 
         $buku->update($data);
@@ -160,8 +162,8 @@ class BukuController extends Controller
     {
         $book = Buku::findOrFail($id);
 
-        Storage::disk('public')->delete($book->file_pdf);
-        Storage::disk('public')->delete($book->cover);
+        Storage::disk('minio')->delete($book->file_pdf);
+        Storage::disk('minio')->delete($book->cover);
 
         $book->delete();
 
