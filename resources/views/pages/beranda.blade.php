@@ -6,7 +6,7 @@
 
         <div id="slider" class="relative z-0 flex transition-transform duration-700 ease-in-out h-full">
             <img src="{{ asset('images/frame_6.png') }}"  class="w-full h-full object-cover flex-shrink-0">
-            <img src="{{ asset('images/frame_5.png') }}" class="w-full h-full object-cover flex-shrink-0">
+            <img src="{{ asset('images/Beranda_fix.jpeg') }}" class="w-full h-full object-cover flex-shrink-0">
             <img src="{{ asset('images/frame_7.png') }}"  class="w-full h-full object-cover flex-shrink-0">
         </div>
 
