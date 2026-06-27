@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\User;
-use App\Models\UnitKerja;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -54,11 +53,11 @@ return new class extends Migration
 
         foreach ($mapping as $namaUnit => $kategori) {
 
-            $unit = UnitKerja::where('nama_unit', $namaUnit)->first();
+            $unit = DB::table('unit_kerjas')->where('nama_unit', $namaUnit)->first();
 
             if ($unit) {
 
-                User::where('id_unit_kerja', $unit->id_unit_kerja)
+                DB::table('users')->where('id_unit_kerja', $unit->id_unit_kerja)
                     ->update([
                         'kategori_unit' => $kategori
                     ]);
