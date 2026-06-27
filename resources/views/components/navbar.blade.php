@@ -40,7 +40,7 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <p class="text-sm font-semibold text-gray-700">Surat Masuk</p>
+                                        <p class="text-sm font-semibold text-gray-700">Surat Pengajuan</p>
                                     </div>
                                 </a>
                                 @if(auth()->user()->hasRole(['super_admin', 'sekretaris']))
@@ -103,31 +103,46 @@
                     </a>
                 @endguest
 
-                @auth
-                @if(auth()->user()->role == 'super_admin')
-                <div class="relative" id="profileDropdownWrapper">
-                    <img src="{{ asset('images/profile-icon.svg') }}"
-                        id="profileBtn"
-                        class="w-10 h-10 xl:w-12 xl:h-12 object-contain cursor-pointer rounded-full hover:opacity-80 transition">
-                    <div id="profileDropdown"
-                        class="absolute right-0 mt-3 w-44 bg-white shadow-xl rounded-xl hidden z-[9999] border border-gray-100">
-                        <a href="/profil"
-                            class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-t-xl">
-                            Profil
-                        </a>
-                        <a href="{{ route('akun.index') }}"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Kelola Akun
-                        </a>
-                    </div>
-                </div>
-                @else
-                <a href="/profil">
-                    <img src="{{ asset('images/profile-icon.svg') }}"
-                        class="w-10 h-10 xl:w-12 xl:h-12 object-contain cursor-pointer rounded-full hover:opacity-80 transition">
-                </a>
-                @endif
-                @endauth
+@auth
+<div class="relative" id="profileDropdownWrapperAll">
+    <button id="profileBtnAllRoles" 
+            onclick="event.stopPropagation(); document.getElementById('profileDropdownAllRoles').classList.toggle('hidden');" 
+            class="focus:outline-none block">
+        <img src="{{ asset('images/profile-icon.svg') }}"
+            class="w-10 h-10 xl:w-12 xl:h-12 object-contain cursor-pointer rounded-full hover:opacity-80 transition">
+    </button>
+    
+    <div id="profileDropdownAllRoles"
+        class="absolute right-0 mt-3 w-44 bg-white shadow-xl rounded-xl hidden z-[9999] border border-gray-100 py-1">
+        <a href="/profil"
+            class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 rounded-t-xl transition">
+            Profil Saya
+        </a>
+        @if(auth()->user()->role == 'super_admin')
+        <a href="{{ route('akun.index') }}"
+            class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition">
+            Kelola Akun
+        </a>
+        @endif
+        <form method="POST" action="{{ route('logout') }}" class="px-2 py-1">
+            @csrf
+            <button type="submit" class="w-full text-left px-2 py-2 text-sm text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition font-medium">
+                Logout
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('click', function(e) {
+    const wrapper = document.getElementById('profileDropdownWrapperAll');
+    const dropdown = document.getElementById('profileDropdownAllRoles');
+    if (wrapper && dropdown && !wrapper.contains(e.target)) {
+        dropdown.classList.add('hidden');
+    }
+});
+</script>
+@endauth
             </div>
 
             <div class="flex lg:hidden items-center gap-2">

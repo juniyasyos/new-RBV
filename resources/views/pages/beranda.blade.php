@@ -5,9 +5,9 @@
     <div class="relative w-full h-[55vh] sm:h-[70vh] lg:h-[calc(95vh-100px)] overflow-hidden">
 
         <div id="slider" class="relative z-0 flex transition-transform duration-700 ease-in-out h-full">
-            <img src="{{ asset('images/frame 6.png') }}"  class="w-full h-full object-cover flex-shrink-0">
-            <img src="{{ asset('images/Frame 5.png') }}" class="w-full h-full object-cover flex-shrink-0">
-            <img src="{{ asset('images/frame 7.png') }}"  class="w-full h-full object-cover flex-shrink-0">
+            <img src="{{ asset('images/frame_6.png') }}"  class="w-full h-full object-cover flex-shrink-0">
+            <img src="{{ asset('images/Frame_5.png') }}" class="w-full h-full object-cover flex-shrink-0">
+            <img src="{{ asset('images/frame_7.png') }}"  class="w-full h-full object-cover flex-shrink-0">
         </div>
 
         <div class="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 group">

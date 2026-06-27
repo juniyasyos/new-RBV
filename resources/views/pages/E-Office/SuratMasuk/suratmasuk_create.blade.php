@@ -14,14 +14,14 @@
             <div>
                 @if(in_array(auth()->user()->role, ['sekretaris','super_admin','admin']))
                     <h1 class="font-poppins text-xl sm:text-2xl font-extrabold text-[#2B3A8C]">
-                        Tambah Surat Masuk
+                        Tambah Surat Pengajuan
                     </h1>
                     <p class="text-gray-400 text-xs">
-                        Input data surat masuk buku agenda
+                        Input data surat pengajuan buku agenda
                     </p>
                 @else
                     <h1 class="font-poppins text-xl sm:text-2xl font-extrabold text-[#2B3A8C]">
-                        Kirim Surat Masuk
+                        Kirim Surat Pengajuan
                     </h1>
                     <p class="text-gray-400 text-xs">
                         Surat akan diproses oleh sekretaris

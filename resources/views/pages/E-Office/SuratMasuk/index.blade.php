@@ -8,14 +8,14 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
                 <h1 class="font-poppins text-2xl sm:text-3xl font-extrabold text-[#2B3A8C]">
-                    Surat Masuk
+                    Surat Pengajuan
                 </h1>
 
                 <p class="text-gray-400 text-xs mt-0.5">
                     @if(auth()->user()->role === 'sekretaris')
-                        Semua surat masuk dari seluruh unit
+                        Semua surat pengajuan dari seluruh unit
                     @else
-                        Surat masuk yang kamu kirim
+                        Surat pengajuan yang kamu kirim
                     @endif
                 </p>
             </div>
@@ -361,7 +361,7 @@
                             <td colspan="8"
                                 class="px-5 py-16 text-center text-gray-400 text-sm italic">
 
-                                Belum ada surat masuk
+                                Belum ada surat pengajuan
                             </td>
                         </tr>
 

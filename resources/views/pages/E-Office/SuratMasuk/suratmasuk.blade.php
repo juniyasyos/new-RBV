@@ -6,14 +6,14 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 mb-8">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-                <h1 class="font-poppins text-3xl sm:text-4xl font-extrabold text-[#2B3A8C] tracking-tight">Surat Masuk</h1>
+                <h1 class="font-poppins text-3xl sm:text-4xl font-extrabold text-[#2B3A8C] tracking-tight">Surat Pengajuan</h1>
                 <p class="text-gray-500 text-sm mt-1">
                     @if(auth()->user()->role === 'sekretaris')
-                        Semua surat masuk dari seluruh unit
+                        Semua surat pengajuan dari seluruh unit
                     @elseif(in_array(auth()->user()->jabatan, ['direktur','kabag']))
-                        Monitoring surat masuk
+                        Monitoring surat pengajuan
                     @else
-                        Surat masuk yang kamu kirim
+                        Surat pengajuan yang kamu kirim
                     @endif
                 </p>
             </div>

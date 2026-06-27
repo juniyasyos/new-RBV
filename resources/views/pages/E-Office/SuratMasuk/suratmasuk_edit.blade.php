@@ -33,7 +33,7 @@
                 @else
 
                 <h1 class="font-poppins text-4xl font-extrabold text-[#2B3A8C]">
-                    Proses Surat Masuk
+                    Proses Surat Pengajuan
                 </h1>
 
                 @endif

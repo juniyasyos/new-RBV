@@ -12,7 +12,7 @@
                     </svg>
                 </a>
                 <div>
-                    <h1 class="font-poppins text-4xl font-extrabold text-[#2B3A8C]">Detail Surat Masuk</h1>
+                    <h1 class="font-poppins text-4xl font-extrabold text-[#2B3A8C]">Detail Surat Pengajuan</h1>
                     {{-- <p class="font-mono text-sm text-gray-400">{{ $surat->nomor_agenda }}</p> --}}
                 </div>
             </div>
