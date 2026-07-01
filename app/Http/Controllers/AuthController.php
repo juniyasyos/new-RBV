@@ -16,14 +16,14 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::where('NIK', $request->nik)->first();
+        $user = User::where('nip', $request->nik)->first();
 
         if (! $user) {
             return back()->with('error', 'NIK tidak ditemukan');
         }
 
         if (! Auth::attempt([
-            'NIK' => $request->nik,
+            'nip' => $request->nik,
             'password' => $request->password,
         ])) {
             return back()->with('error', 'Password salah');

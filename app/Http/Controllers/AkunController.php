@@ -27,7 +27,7 @@ class AkunController extends Controller
             $query->where(function ($q) use ($search) {
 
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('NIK', 'like', "%{$search}%")
+                    ->orWhere('nip', 'like', "%{$search}%")
 
                     ->orWhereHas('jabatans', function ($jabatan) use ($search) {
 
@@ -71,7 +71,7 @@ class AkunController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'NIK' => 'required|unique:users,NIK',
+            'nip' => 'required|unique:users,nip',
             'name' => 'required',
 
             'id_jabatan' => 'required|exists:jabatans,id_jabatan',
@@ -84,7 +84,7 @@ class AkunController extends Controller
         ]);
 
         $user = User::create([
-            'NIK' => $request->NIK,
+            'nip' => $request->nip,
             'name' => $request->name,
             'password' => Hash::make($request->password),
         ]);
@@ -124,7 +124,7 @@ class AkunController extends Controller
         $user = User::findOrFail($id);
 
         $request->validate([
-            'NIK' => 'required|unique:users,NIK,' . $id . ',id_user',
+            'nip' => 'required|unique:users,nip,' . $id . ',id_user',
 
             'name' => 'required',
 
@@ -138,7 +138,7 @@ class AkunController extends Controller
         ]);
 
         $data = [
-            'NIK' => $request->NIK,
+            'nip' => $request->nip,
             'name' => $request->name,
         ];
         

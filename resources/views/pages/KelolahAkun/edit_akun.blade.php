@@ -85,8 +85,8 @@
                         </label>
 
                         <input type="text"
-                            name="NIK"
-                            value="{{ old('NIK', $user->NIK) }}"
+                            name="nip"
+                            value="{{ old('nip', $user->nip) }}"
                             class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5
                             focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>

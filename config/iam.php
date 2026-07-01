@@ -204,7 +204,7 @@ return [
     'user_fields' => [
         'iam_id' => 'sub',        // Required: JWT sub maps to iam_id
         'name' => 'name',
-        'NIK' => 'nip',           // RBV uses NIK, assuming IAM sends nip
+        'nip' => 'nip',           // Maps IAM nip field to local nip column
     ],
 
     /*

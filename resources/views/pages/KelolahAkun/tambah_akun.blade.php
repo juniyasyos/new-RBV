@@ -49,7 +49,7 @@
 
                     <div>
                         <label class="block text-gray-500 text-sm mb-1 ml-1">NIK</label>
-                        <input type="text" name="NIK" value="{{ old('NIK') }}"
+                        <input type="text" name="nip" value="{{ old('nip') }}"
                             class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
 

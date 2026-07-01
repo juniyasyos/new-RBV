@@ -131,7 +131,7 @@
                         <tr class="hover:bg-[#F8FAFF] transition
                             {{ $akun->id_user === auth()->user()->id_user ? 'bg-blue-50/30' : '' }}">
 
-                            <td class="px-4 py-4 font-mono text-xs text-gray-500">{{ $akun->NIK }}</td>
+                            <td class="px-4 py-4 font-mono text-xs text-gray-500">{{ $akun->nip }}</td>
 
                             <td class="px-4 py-4">
                                 <div class="flex items-center gap-3">

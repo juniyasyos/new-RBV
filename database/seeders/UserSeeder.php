@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'NIK' => '1234567',
+                'nip' => '1234567',
                 'name' => 'Super Admin',
                 'password' => Hash::make('superadmin123'),
                 'id_role' => 1,
@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
                 'id_unit_kerja' => 1,
             ],
             [
-                'NIK' => '12345',
+                'nip' => '12345',
                 'name' => 'Admin',
                 'password' => Hash::make('admin123'),
                 'id_role' => 2,
@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
                 'id_unit_kerja' => 1,
             ],
             [
-                'NIK' => '1234',
+                'nip' => '1234',
                 'name' => 'Sekretaris',
                 'password' => Hash::make('sekretaris123'),
                 'id_role' => 3,
@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
                 'id_unit_kerja' => 33,
             ],
             [
-                'NIK' => '123',
+                'nip' => '123',
                 'name' => 'Karyawan',
                 'password' => Hash::make('karyawan123'),
                 'id_role' => 4,
@@ -47,7 +47,7 @@ class UserSeeder extends Seeder
 
         foreach ($users as $userData) {
             $user = \App\Models\User::create([
-                'NIK' => $userData['NIK'],
+                'nip' => $userData['nip'],
                 'name' => $userData['name'],
                 'password' => $userData['password'],
             ]);

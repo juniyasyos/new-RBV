@@ -21,7 +21,7 @@ class AkunApiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'NIK' => 'required|unique:users,NIK',
+            'nip' => 'required|unique:users,nip',
             'name' => 'required',
             'jabatan' => 'required',
             'unit_kerja' => 'required',
@@ -30,7 +30,7 @@ class AkunApiController extends Controller
         ]);
 
         $user = User::create([
-            'NIK' => $request->NIK,
+            'nip' => $request->nip,
             'name' => $request->name,
             'jabatan' => $request->jabatan,
             'unit_kerja' => $request->unit_kerja,

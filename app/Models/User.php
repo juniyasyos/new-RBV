@@ -17,7 +17,7 @@ class User extends Authenticatable implements JWTSubject
     protected $keyType = 'int';
     protected $fillable = [
         'iam_id',
-        'NIK',
+        'nip',
         'name',
         'status',
         'password',

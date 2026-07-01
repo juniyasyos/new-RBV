@@ -11,11 +11,11 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'NIK' => 'required',
+            'nip' => 'required',
             'password' => 'required'
         ]);
 
-        $credentials = $request->only('NIK', 'password');
+        $credentials = $request->only('nip', 'password');
 
         if (!$token = Auth::guard('api')->attempt($credentials)) {
             return response()->json([
